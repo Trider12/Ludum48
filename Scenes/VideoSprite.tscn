@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://Assets/Videos/Rick Astley - Never Gonna Give You Up (Video).webm" type="VideoStream" id=1]
+[ext_resource path="res://Assets/Videos/Rick Astley - Never Gonna Give You Up (Video) VP8.webm" type="VideoStream" id=1]
 [ext_resource path="res://Core/VideoSprite.cs" type="Script" id=2]
 [ext_resource path="res://Core/VideoPlayer.cs" type="Script" id=3]
 
@@ -9,13 +9,8 @@ viewport_path = NodePath("Viewport")
 
 [node name="VideoSprite" type="Node2D"]
 
-[node name="Sprite" type="Sprite" parent="."]
-texture = SubResource( 1 )
-script = ExtResource( 2 )
-
 [node name="Viewport" type="Viewport" parent="."]
 size = Vector2( 1920, 1080 )
-size_override_stretch = true
 transparent_bg = true
 disable_3d = true
 usage = 0
@@ -30,3 +25,7 @@ script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = SubResource( 1 )
+script = ExtResource( 2 )
