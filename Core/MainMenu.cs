@@ -84,7 +84,7 @@ public class MainMenu : Control
             _resolutionsOption.AddItem(res);
         }
 
-        _resolutionsOption.Selected = 0;
+        _resolutionsOption.Selected = 1;
         _masterVolumeSlider.Value = 50;
         _fullscreenCheckBox.Pressed = false;
 
@@ -112,6 +112,7 @@ public class MainMenu : Control
         var resolution = Resolutions[Array.IndexOf(ResolutionsNames, _settings.Resolution)];
         OS.WindowSize = resolution;
         GetViewport().SetSizeOverride(true, resolution);
+        GetViewport().SizeOverrideStretch = true;
         OS.CenterWindow();
 
         AudioServer.SetBusVolumeDb(AudioServer.GetBusIndex("Master"), GD.Linear2Db(_settings.MasterVolume / 100f));
