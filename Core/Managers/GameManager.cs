@@ -1,12 +1,9 @@
-﻿using Godot;
-
-namespace GlobalGameJam2021.Core.Managers
+﻿namespace GlobalGameJam2021.Core.Managers
 {
     public class GameManager
     {
         static GameManager()
         {
-            OS.CenterWindow();
         }
 
         private GameManager()
