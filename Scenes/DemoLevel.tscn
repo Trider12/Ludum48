@@ -1,87 +1,10 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://Scenes/VideoSprite.tscn" type="PackedScene" id=1]
-[ext_resource path="res://Assets/Videos/orc_idle.webm" type="VideoStream" id=2]
-[ext_resource path="res://Core/VideoSprite.cs" type="Script" id=3]
-[ext_resource path="res://Assets/Videos/female_Elven_ranger_idle.webm" type="VideoStream" id=4]
-[ext_resource path="res://Shaders/VideoSprite.shader" type="Shader" id=5]
 [ext_resource path="res://Scenes/Explosion.tscn" type="PackedScene" id=6]
-
-[sub_resource type="ViewportTexture" id=5]
-viewport_path = NodePath("Viewport")
-
-[sub_resource type="ShaderMaterial" id=6]
-resource_local_to_scene = true
-shader = ExtResource( 5 )
-shader_param/Diffuse = SubResource( 5 )
-
-[sub_resource type="ViewportTexture" id=2]
-viewport_path = NodePath("Viewport")
-
-[sub_resource type="ViewportTexture" id=13]
-viewport_path = NodePath("Orc/Viewport")
-
-[sub_resource type="ShaderMaterial" id=8]
-resource_local_to_scene = true
-shader = ExtResource( 5 )
-shader_param/Diffuse = SubResource( 13 )
-
-[sub_resource type="ViewportTexture" id=11]
-viewport_path = NodePath("Orc/Viewport")
-
-[sub_resource type="ViewportTexture" id=14]
-viewport_path = NodePath("Elf/Viewport")
-
-[sub_resource type="ShaderMaterial" id=10]
-resource_local_to_scene = true
-shader = ExtResource( 5 )
-shader_param/Diffuse = SubResource( 14 )
-
-[sub_resource type="ViewportTexture" id=12]
-viewport_path = NodePath("Elf/Viewport")
 
 [node name="Node2D" type="Node2D"]
 
-[node name="RickRoll" parent="." instance=ExtResource( 1 )]
-visible = false
-
-[node name="Sprite" parent="RickRoll" index="1"]
-material = SubResource( 6 )
-texture = SubResource( 2 )
-script = ExtResource( 3 )
-
-[node name="Orc" parent="." instance=ExtResource( 1 )]
-visible = false
-
-[node name="Viewport" parent="Orc" index="0"]
-size = Vector2( 256, 128 )
-
-[node name="VideoPlayer" parent="Orc/Viewport" index="0"]
-margin_right = 256.0
-margin_bottom = 256.0
-stream = ExtResource( 2 )
-
-[node name="Sprite" parent="Orc" index="1"]
-material = SubResource( 8 )
-texture = SubResource( 11 )
-
-[node name="Elf" parent="." instance=ExtResource( 1 )]
-visible = false
-
-[node name="Viewport" parent="Elf" index="0"]
-size = Vector2( 256, 256 )
-
-[node name="VideoPlayer" parent="Elf/Viewport" index="0"]
-margin_right = 256.0
-margin_bottom = 256.0
-stream = ExtResource( 4 )
-
-[node name="Sprite" parent="Elf" index="1"]
-material = SubResource( 10 )
-texture = SubResource( 12 )
-
 [node name="Explosions" type="Node2D" parent="."]
-position = Vector2( 0, 300 )
 
 [node name="Explosion" parent="Explosions" instance=ExtResource( 6 )]
 position = Vector2( 528.229, 203.084 )
@@ -112,9 +35,3 @@ position = Vector2( 521.094, 488.494 )
 
 [node name="Explosion10" parent="Explosions" instance=ExtResource( 6 )]
 position = Vector2( 334.626, 196.192 )
-
-[editable path="RickRoll"]
-
-[editable path="Orc"]
-
-[editable path="Elf"]

@@ -14,7 +14,6 @@ shader_param/Diffuse = ExtResource( 1 )
 viewport_path = NodePath("Viewport")
 
 [node name="Explosion" type="Node2D"]
-position = Vector2( 561.527, 464.71 )
 __meta__ = {
 "_edit_group_": true
 }
@@ -39,3 +38,5 @@ __meta__ = {
 [node name="Sprite" type="Sprite" parent="."]
 material = SubResource( 1 )
 texture = SubResource( 2 )
+region_enabled = true
+region_rect = Rect2( 0, 0, 512, 512 )
