@@ -107,12 +107,13 @@ public class MainMenu : Control
 
     private void ApplySettings()
     {
+        OS.WindowFullscreen = _settings.IsFullscreen;
+
         var resolution = Resolutions[Array.IndexOf(ResolutionsNames, _settings.Resolution)];
         OS.WindowSize = resolution;
         GetViewport().SetSizeOverride(true, resolution);
-        OS.WindowFullscreen = _settings.IsFullscreen;
-        if (!_settings.IsFullscreen)
-            OS.CenterWindow();
+        OS.CenterWindow();
+
         AudioServer.SetBusVolumeDb(AudioServer.GetBusIndex("Master"), GD.Linear2Db(_settings.MasterVolume / 100f));
 
         GD.Print(OS.WindowSize);
