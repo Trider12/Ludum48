@@ -16,4 +16,14 @@ public class VideoPlayer : Godot.VideoPlayer
             }
         }
     }
+
+    public void _on_Finished()
+    {
+        Play();
+    }
+
+    public override void _Ready()
+    {
+        Connect("finished", this, nameof(_on_Finished));
+    }
 }
