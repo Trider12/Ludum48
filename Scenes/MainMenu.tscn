@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Assets/Fonts/Roboto/Roboto-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Core/MainMenu.cs" type="Script" id=2]
@@ -8,8 +8,33 @@ size = 30
 use_filter = true
 font_data = ExtResource( 1 )
 
+[sub_resource type="DynamicFont" id=3]
+size = 30
+use_filter = true
+font_data = ExtResource( 1 )
+
 [sub_resource type="DynamicFont" id=2]
 size = 30
+use_filter = true
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 30
+use_filter = true
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 18
+use_filter = true
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=6]
+size = 18
+use_filter = true
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=7]
+size = 18
 use_filter = true
 font_data = ExtResource( 1 )
 
@@ -21,35 +46,138 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="Buttons" type="VBoxContainer" parent="."]
 anchor_left = 0.4
-anchor_top = 0.2
+anchor_top = 0.5
 anchor_right = 0.6
-anchor_bottom = 0.8
-custom_constants/separation = 40
+anchor_bottom = 0.9
+custom_constants/separation = 20
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PlayButton" type="Button" parent="VBoxContainer"]
-margin_right = 204.0
-margin_bottom = 93.0
+[node name="PlayButton" type="Button" parent="Buttons"]
+margin_right = 256.0
+margin_bottom = 82.0
 size_flags_vertical = 3
 custom_fonts/font = SubResource( 1 )
 text = "Play"
 
-[node name="Button2" type="Button" parent="VBoxContainer"]
-margin_top = 133.0
-margin_right = 204.0
-margin_bottom = 226.0
+[node name="SettingsButton" type="Button" parent="Buttons"]
+margin_top = 102.0
+margin_right = 256.0
+margin_bottom = 185.0
 size_flags_vertical = 3
+custom_fonts/font = SubResource( 3 )
+text = "Settings"
 
-[node name="QuitButton" type="Button" parent="VBoxContainer"]
-margin_top = 266.0
-margin_right = 204.0
-margin_bottom = 360.0
+[node name="QuitButton" type="Button" parent="Buttons"]
+margin_top = 205.0
+margin_right = 256.0
+margin_bottom = 288.0
 size_flags_vertical = 3
 custom_fonts/font = SubResource( 2 )
 text = "Quit"
-[connection signal="pressed" from="VBoxContainer/PlayButton" to="." method="_on_PlayButton_pressed"]
-[connection signal="pressed" from="VBoxContainer/QuitButton" to="." method="_on_QuitButton_pressed"]
+
+[node name="SettingsWindow" type="AcceptDialog" parent="."]
+visible = true
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -200.0
+margin_top = -150.0
+margin_right = 200.0
+margin_bottom = 150.0
+popup_exclusive = true
+window_title = "Settings"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="SettingsWindow"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 20.0
+margin_top = 40.0
+margin_right = -20.0
+margin_bottom = -40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="SettingsWindow/MarginContainer"]
+margin_right = 360.0
+margin_bottom = 220.0
+
+[node name="Label" type="Label" parent="SettingsWindow/MarginContainer/VBoxContainer"]
+visible = false
+margin_right = 360.0
+margin_bottom = 75.0
+size_flags_horizontal = 5
+size_flags_vertical = 1
+custom_fonts/font = SubResource( 4 )
+text = "Settings
+"
+align = 1
+valign = 1
+
+[node name="GridContainer" type="GridContainer" parent="SettingsWindow/MarginContainer/VBoxContainer"]
+margin_left = 63.0
+margin_right = 297.0
+margin_bottom = 88.0
+size_flags_horizontal = 4
+custom_constants/vseparation = 10
+custom_constants/hseparation = 20
+columns = 2
+
+[node name="Label" type="Label" parent="SettingsWindow/MarginContainer/VBoxContainer/GridContainer"]
+margin_right = 122.0
+margin_bottom = 22.0
+size_flags_vertical = 1
+custom_fonts/font = SubResource( 5 )
+text = "Resolution"
+
+[node name="OptionButton" type="OptionButton" parent="SettingsWindow/MarginContainer/VBoxContainer/GridContainer"]
+margin_left = 142.0
+margin_right = 234.0
+margin_bottom = 22.0
+text = "1280x720"
+selected = 4
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label2" type="Label" parent="SettingsWindow/MarginContainer/VBoxContainer/GridContainer"]
+margin_top = 32.0
+margin_right = 122.0
+margin_bottom = 54.0
+custom_fonts/font = SubResource( 6 )
+text = "Master Volume"
+
+[node name="HSlider" type="HSlider" parent="SettingsWindow/MarginContainer/VBoxContainer/GridContainer"]
+margin_left = 142.0
+margin_top = 32.0
+margin_right = 234.0
+margin_bottom = 48.0
+value = 50.0
+rounded = true
+tick_count = 11
+ticks_on_borders = true
+
+[node name="Label3" type="Label" parent="SettingsWindow/MarginContainer/VBoxContainer/GridContainer"]
+margin_top = 65.0
+margin_right = 122.0
+margin_bottom = 87.0
+custom_fonts/font = SubResource( 7 )
+text = "Fullscreen"
+
+[node name="CheckBox" type="CheckBox" parent="SettingsWindow/MarginContainer/VBoxContainer/GridContainer"]
+margin_left = 142.0
+margin_top = 64.0
+margin_right = 234.0
+margin_bottom = 88.0
+[connection signal="pressed" from="Buttons/PlayButton" to="." method="_on_PlayButton_pressed"]
+[connection signal="pressed" from="Buttons/SettingsButton" to="." method="_on_SettingsButton_pressed"]
+[connection signal="pressed" from="Buttons/QuitButton" to="." method="_on_QuitButton_pressed"]
+[connection signal="confirmed" from="SettingsWindow" to="." method="_on_SettingsWindow_confirmed"]

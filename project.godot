@@ -21,7 +21,10 @@ config/icon="res://Assets/Icons/icon.png"
 
 [display]
 
+window/size/width=1280
+window/size/height=720
 window/size/resizable=false
+window/dpi/allow_hidpi=true
 
 [editor_plugins]
 
