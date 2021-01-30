@@ -7,31 +7,31 @@
 [node name="Explosions" type="Node2D" parent="."]
 
 [node name="Explosion" parent="Explosions" instance=ExtResource( 6 )]
-position = Vector2( 528.229, 203.084 )
+position = Vector2( 525.232, 176.114 )
 
 [node name="Explosion2" parent="Explosions" instance=ExtResource( 6 )]
-position = Vector2( 178.602, 119.84 )
+position = Vector2( 145.639, 119.84 )
 
 [node name="Explosion3" parent="Explosions" instance=ExtResource( 6 )]
-position = Vector2( 314.172, 376.709 )
+position = Vector2( 386.091, 364.723 )
 
 [node name="Explosion4" parent="Explosions" instance=ExtResource( 6 )]
-position = Vector2( 842.18, 414.763 )
+position = Vector2( 875.143, 495.672 )
 
 [node name="Explosion5" parent="Explosions" instance=ExtResource( 6 )]
 position = Vector2( 873.099, 138.867 )
 
 [node name="Explosion6" parent="Explosions" instance=ExtResource( 6 )]
-position = Vector2( 632.879, 395.736 )
+position = Vector2( 545.977, 542.57 )
 
 [node name="Explosion7" parent="Explosions" instance=ExtResource( 6 )]
-position = Vector2( 133.412, 469.467 )
+position = Vector2( 166.375, 595.325 )
 
 [node name="Explosion8" parent="Explosions" instance=ExtResource( 6 )]
-position = Vector2( 728.016, 98.4342 )
+position = Vector2( 910.809, 290.218 )
 
 [node name="Explosion9" parent="Explosions" instance=ExtResource( 6 )]
-position = Vector2( 521.094, 488.494 )
+position = Vector2( 1129.41, 584.386 )
 
 [node name="Explosion10" parent="Explosions" instance=ExtResource( 6 )]
-position = Vector2( 334.626, 196.192 )
+position = Vector2( 1170.68, 118.28 )
