@@ -3,7 +3,7 @@ using Godot;
 
 namespace GlobalGameJam2021.Core
 {
-    public class Item : Node2D
+    public class Item : MovableEntity
     {
         private Sprite _sprite;
         private bool _taken = false;
@@ -11,20 +11,31 @@ namespace GlobalGameJam2021.Core
 
         public override void _Input(InputEvent @event)
         {
+            if (IsPhysicsProcessing())
+            {
+                return;
+            }
+
             if (@event is InputEventMouseButton eventKey)
             {
-                if (eventKey.Pressed && eventKey.ButtonIndex == (int)ButtonList.Left && !eventKey.IsEcho())
+                if (eventKey.ButtonIndex == (int)ButtonList.Left && !eventKey.IsEcho())
                 {
                     if (_sprite.GetRect().HasPoint(ToLocal(eventKey.Position)))
                     {
-                        if (!_taken)
+                        if (eventKey.Pressed)
                         {
-                            _taken = GameManager.Instance.InventoryManager.AddItemToInventory(this);
+                            if (!_taken)
+                            {
+                                _taken = GameManager.Instance.InventoryManager.AddItemToInventory(this);
+                            }
+                            else if (!IsHolding)
+                            {
+                                GameManager.Instance.InventoryManager.TakeItemFromInventory(this);
+                            }
                         }
-                        else if (!IsHolding)
+                        else if (IsHolding)
                         {
-                            GameManager.Instance.InventoryManager.TakeItemFromInventory(this);
-                            IsHolding = true;
+                            GameManager.Instance.InventoryManager.ReturnItemToInventory();
                         }
                     }
                 }
@@ -33,6 +44,8 @@ namespace GlobalGameJam2021.Core
 
         public override void _Ready()
         {
+            base._Ready();
+
             _sprite = GetNode<Sprite>("Sprite");
         }
     }

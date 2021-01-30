@@ -14,20 +14,6 @@ namespace GlobalGameJam2021.Core.Managers
 
         public Item HoldingItem { get; private set; } = null;
 
-        public override void _GuiInput(InputEvent @event)
-        {
-            if (@event is InputEventMouseButton eventKey)
-            {
-                if (eventKey.Pressed && eventKey.ButtonIndex == (int)ButtonList.Left && !eventKey.IsEcho())
-                {
-                    if (HoldingItem != null)
-                    {
-                        ReturnHoldingItemToInventory();
-                    }
-                }
-            }
-        }
-
         public override void _Input(InputEvent @event)
         {
             if (HoldingItem != null)
@@ -52,9 +38,10 @@ namespace GlobalGameJam2021.Core.Managers
         {
             if (HoldingItem != null)
             {
+                // should never happen
                 if (HoldingItem == item)
                 {
-                    ReturnHoldingItemToInventory();
+                    ReturnItemToInventory();
                 }
 
                 return false;
@@ -64,10 +51,15 @@ namespace GlobalGameJam2021.Core.Managers
             {
                 if (slot.Item == null)
                 {
+                    var pos = item.GlobalPosition;
+
                     slot.Item = item;
                     item.GetParent().RemoveChild(item);
                     slot.AddChild(item);
-                    item.Position = slot.RectSize / 2;
+
+                    item.GlobalPosition = pos;
+
+                    item.MoveTo(slot.RectGlobalPosition + slot.RectSize / 2);
 
                     return true;
                 }
@@ -76,7 +68,7 @@ namespace GlobalGameJam2021.Core.Managers
             return false;
         }
 
-        public void ReturnHoldingItemToInventory()
+        public void ReturnItemToInventory()
         {
             if (HoldingItem == null)
             {
@@ -98,8 +90,13 @@ namespace GlobalGameJam2021.Core.Managers
 
         public void TakeItemFromInventory(Item item)
         {
+            if (HoldingItem != null)
+            {
+                return;
+            }
+
             HoldingItem = item;
-            GetTree().SetInputAsHandled();
+            HoldingItem.IsHolding = true;
         }
     }
 }

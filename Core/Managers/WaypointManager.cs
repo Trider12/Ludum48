@@ -8,7 +8,7 @@ namespace GlobalGameJam2021.Core.Managers
     {
         private Waypoint _currentWaypoint;
 
-        private Player _player;
+        private MovableEntity _player;
         private List<Waypoint> _waypoints = new List<Waypoint>();
 
         public WaypointManager()
@@ -38,7 +38,7 @@ namespace GlobalGameJam2021.Core.Managers
 
         public override void _Ready()
         {
-            _player = GetNode<Player>(PlayerNodePath);
+            _player = GetNode<MovableEntity>(PlayerNodePath);
 
             foreach (var child in GetChildren())
             {
