@@ -50,6 +50,7 @@ WaypointsNodePaths = [ NodePath("../Waypoint2"), NodePath("../Waypoint3"), NodeP
 
 [node name="Waypoint2" parent="WaypointManager" instance=ExtResource( 1 )]
 position = Vector2( 970.355, 516.972 )
+ExitLevelName = "qwerty"
 WaypointsNodePaths = [ NodePath("../Waypoint") ]
 
 [node name="Waypoint3" parent="WaypointManager" instance=ExtResource( 1 )]

@@ -8,6 +8,9 @@ namespace GlobalGameJam2021.Core
         [Signal]
         public delegate void Clicked(Waypoint waypoint);
 
+        [Export]
+        public string ExitLevelName { get; set; } = string.Empty;
+
         public List<Waypoint> Waypoints { get; set; } = new List<Waypoint>();
 
         [Export]

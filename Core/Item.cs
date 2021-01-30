@@ -8,6 +8,7 @@ namespace GlobalGameJam2021.Core
         private Sprite _sprite;
         private bool _taken = false;
         public bool IsHolding { get; set; } = false;
+        protected override float Speed { get; set; } = 300;
 
         public override void _Input(InputEvent @event)
         {

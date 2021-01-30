@@ -28,9 +28,14 @@ namespace GlobalGameJam2021.Core.Managers
                     foreach (var point in waypoint.Waypoints)
                     {
                         DrawLine(waypoint.Position, point.Position, Colors.Green);
+
                         var vec = point.Position - waypoint.Position;
-                        var dir = vec.Normalized();
-                        DrawTriangle(point.Position - vec / 10f, dir, 10, Colors.Green);
+                        DrawTriangle(point.Position - vec / 10f, vec.Normalized(), 10, Colors.Green);
+
+                        if (!string.IsNullOrEmpty(waypoint.ExitLevelName))
+                        {
+                            DrawRect(new Rect2(waypoint.Position - new Vector2(10, 10), new Vector2(20, 20)), Colors.Red);
+                        }
                     }
                 }
             }
@@ -67,6 +72,13 @@ namespace GlobalGameJam2021.Core.Managers
             }
         }
 
+        private void ChangeLevel(string levelName)
+        {
+            _player.Disconnect(nameof(MovableEntity.FinishedMovement), this, nameof(ChangeLevel));
+
+            SceneManager.Instance.LoadLevel(levelName);
+        }
+
         private void DrawTriangle(Vector2 pos, Vector2 dir, float size, Color color)
         {
             var a = pos + dir * size;
@@ -85,6 +97,11 @@ namespace GlobalGameJam2021.Core.Managers
             if (_player.MoveTo(waypoint.GlobalPosition))
             {
                 _currentWaypoint = waypoint;
+
+                if (!string.IsNullOrEmpty(_currentWaypoint.ExitLevelName))
+                {
+                    _player.Connect(nameof(MovableEntity.FinishedMovement), this, nameof(ChangeLevel), new Godot.Collections.Array { _currentWaypoint.ExitLevelName });
+                }
             }
         }
     }

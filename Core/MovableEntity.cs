@@ -7,7 +7,10 @@ namespace GlobalGameJam2021.Core
         private const float Tolerance = 5;
         private Vector2 _destination;
 
-        protected float _speed = 200;
+        [Signal]
+        public delegate void FinishedMovement();
+
+        protected virtual float Speed { get; set; } = 200;
 
         public override void _PhysicsProcess(float delta)
         {
@@ -15,11 +18,14 @@ namespace GlobalGameJam2021.Core
             {
                 GlobalPosition = _destination;
                 SetPhysicsProcess(false);
+
+                EmitSignal(nameof(FinishedMovement));
+
                 return;
             }
 
             var dir = _destination - GlobalPosition;
-            var velocity = _speed * dir.Normalized();
+            var velocity = Speed * dir.Normalized();
 
             MoveAndSlide(velocity);
         }

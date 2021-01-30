@@ -112,7 +112,7 @@ margin_bottom = 256.0
 
 [node name="Label" type="Label" parent="SettingsWindow/MarginContainer/VBoxContainer"]
 visible = false
-margin_right = 360.0
+margin_right = 384.0
 margin_bottom = 75.0
 size_flags_horizontal = 5
 size_flags_vertical = 1

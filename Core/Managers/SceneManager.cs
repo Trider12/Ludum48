@@ -26,6 +26,11 @@ namespace GlobalGameJam2021.Core.Managers
             LoadLevel(_demoLevelScene.Instance());
         }
 
+        public void LoadLevel(string levelName)
+        {
+            GD.Print("Next level");
+        }
+
         public void LoadMainMenu()
         {
             _currentSceneInstance.QueueFree();
