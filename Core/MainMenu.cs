@@ -22,7 +22,7 @@ namespace GlobalGameJam2021.Core
         private static readonly string[] ResolutionsNames;
 
         private CheckBox _fullscreenCheckBox;
-        private HSlider _masterVolumeSlider;
+        private ValueSlider _masterVolumeSlider;
         private OptionButton _resolutionsOption;
         private Settings _settings;
         private AcceptDialog _settingsWindow;
@@ -76,9 +76,9 @@ namespace GlobalGameJam2021.Core
         public override void _Ready()
         {
             _settingsWindow = GetNode<AcceptDialog>("SettingsWindow");
-            _resolutionsOption = GetNode<OptionButton>("SettingsWindow/MarginContainer/VBoxContainer/GridContainer/OptionButton");
-            _masterVolumeSlider = GetNode<HSlider>("SettingsWindow/MarginContainer/VBoxContainer/GridContainer/HSlider");
-            _fullscreenCheckBox = GetNode<CheckBox>("SettingsWindow/MarginContainer/VBoxContainer/GridContainer/CheckBox");
+            _resolutionsOption = GetNode<OptionButton>("SettingsWindow/MarginContainer/GridContainer/OptionButton");
+            _masterVolumeSlider = GetNode<ValueSlider>("SettingsWindow/MarginContainer/GridContainer/ValueSlider");
+            _fullscreenCheckBox = GetNode<CheckBox>("SettingsWindow/MarginContainer/GridContainer/CheckBox");
 
             foreach (var res in ResolutionsNames)
             {
@@ -120,8 +120,6 @@ namespace GlobalGameJam2021.Core
             OS.CenterWindow();
 
             AudioServer.SetBusVolumeDb(AudioServer.GetBusIndex("Master"), GD.Linear2Db(_settings.MasterVolume / 100f));
-
-            GD.Print(OS.WindowSize + "|" + GetViewport().Size);
         }
     }
 }

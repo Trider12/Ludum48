@@ -2,6 +2,7 @@
 
 [ext_resource path="res://Assets/Fonts/Roboto/Roboto-Regular.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://Core/MainMenu.cs" type="Script" id=2]
+[ext_resource path="res://Scenes/ValueSlider.tscn" type="PackedScene" id=3]
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
@@ -18,22 +19,17 @@ size = 30
 use_filter = true
 font_data = ExtResource( 1 )
 
-[sub_resource type="DynamicFont" id=4]
-size = 30
-use_filter = true
-font_data = ExtResource( 1 )
-
 [sub_resource type="DynamicFont" id=5]
 size = 18
 use_filter = true
 font_data = ExtResource( 1 )
 
-[sub_resource type="DynamicFont" id=6]
+[sub_resource type="DynamicFont" id=7]
 size = 18
 use_filter = true
 font_data = ExtResource( 1 )
 
-[sub_resource type="DynamicFont" id=7]
+[sub_resource type="DynamicFont" id=6]
 size = 18
 use_filter = true
 font_data = ExtResource( 1 )
@@ -79,7 +75,7 @@ size_flags_vertical = 3
 custom_fonts/font = SubResource( 3 )
 text = "Quit"
 
-[node name="SettingsWindow" type="AcceptDialog" parent="."]
+[node name="SettingsWindow" type="ConfirmationDialog" parent="."]
 visible = true
 anchor_left = 0.5
 anchor_top = 0.5
@@ -91,9 +87,6 @@ margin_right = 200.0
 margin_bottom = 150.0
 popup_exclusive = true
 window_title = "Settings"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="MarginContainer" type="MarginContainer" parent="SettingsWindow"]
 anchor_right = 1.0
@@ -106,75 +99,56 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="SettingsWindow/MarginContainer"]
-margin_right = 384.0
+[node name="GridContainer" type="GridContainer" parent="SettingsWindow/MarginContainer"]
+margin_left = 57.0
+margin_right = 327.0
 margin_bottom = 256.0
-
-[node name="Label" type="Label" parent="SettingsWindow/MarginContainer/VBoxContainer"]
-visible = false
-margin_right = 384.0
-margin_bottom = 75.0
-size_flags_horizontal = 5
-size_flags_vertical = 1
-custom_fonts/font = SubResource( 4 )
-text = "Settings
-"
-align = 1
-valign = 1
-
-[node name="GridContainer" type="GridContainer" parent="SettingsWindow/MarginContainer/VBoxContainer"]
-margin_left = 75.0
-margin_right = 309.0
-margin_bottom = 88.0
+grow_horizontal = 0
+grow_vertical = 0
 size_flags_horizontal = 4
 custom_constants/vseparation = 10
 custom_constants/hseparation = 20
 columns = 2
 
-[node name="Label" type="Label" parent="SettingsWindow/MarginContainer/VBoxContainer/GridContainer"]
+[node name="Label" type="Label" parent="SettingsWindow/MarginContainer/GridContainer"]
 margin_right = 122.0
 margin_bottom = 22.0
 size_flags_vertical = 1
 custom_fonts/font = SubResource( 5 )
 text = "Resolution"
 
-[node name="OptionButton" type="OptionButton" parent="SettingsWindow/MarginContainer/VBoxContainer/GridContainer"]
+[node name="OptionButton" type="OptionButton" parent="SettingsWindow/MarginContainer/GridContainer"]
 margin_left = 142.0
-margin_right = 234.0
+margin_right = 270.0
 margin_bottom = 22.0
 text = "1280x720"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label2" type="Label" parent="SettingsWindow/MarginContainer/VBoxContainer/GridContainer"]
-margin_top = 32.0
+[node name="Label3" type="Label" parent="SettingsWindow/MarginContainer/GridContainer"]
+margin_top = 33.0
 margin_right = 122.0
-margin_bottom = 54.0
-custom_fonts/font = SubResource( 6 )
-text = "Master Volume"
-
-[node name="HSlider" type="HSlider" parent="SettingsWindow/MarginContainer/VBoxContainer/GridContainer"]
-margin_left = 142.0
-margin_top = 32.0
-margin_right = 234.0
-margin_bottom = 48.0
-value = 50.0
-rounded = true
-tick_count = 11
-ticks_on_borders = true
-
-[node name="Label3" type="Label" parent="SettingsWindow/MarginContainer/VBoxContainer/GridContainer"]
-margin_top = 65.0
-margin_right = 122.0
-margin_bottom = 87.0
+margin_bottom = 55.0
 custom_fonts/font = SubResource( 7 )
 text = "Fullscreen"
 
-[node name="CheckBox" type="CheckBox" parent="SettingsWindow/MarginContainer/VBoxContainer/GridContainer"]
+[node name="CheckBox" type="CheckBox" parent="SettingsWindow/MarginContainer/GridContainer"]
 margin_left = 142.0
-margin_top = 64.0
-margin_right = 234.0
+margin_top = 32.0
+margin_right = 270.0
+margin_bottom = 56.0
+
+[node name="Label2" type="Label" parent="SettingsWindow/MarginContainer/GridContainer"]
+margin_top = 66.0
+margin_right = 122.0
+margin_bottom = 88.0
+custom_fonts/font = SubResource( 6 )
+text = "Master Volume"
+
+[node name="ValueSlider" parent="SettingsWindow/MarginContainer/GridContainer" instance=ExtResource( 3 )]
+margin_top = 66.0
+margin_right = 270.0
 margin_bottom = 88.0
 [connection signal="pressed" from="Buttons/PlayButton" to="." method="_on_PlayButton_pressed"]
 [connection signal="pressed" from="Buttons/SettingsButton" to="." method="_on_SettingsButton_pressed"]
