@@ -1,29 +1,40 @@
-public class VideoPlayer : Godot.VideoPlayer
+using Godot;
+
+namespace GlobalGameJam2021.Core
 {
-    public override void _Notification(int what)
+    public class VideoPlayer : Godot.VideoPlayer
     {
-        switch (what)
+        [Export]
+        private bool Loop { get; set; } = false;
+
+        public override void _Notification(int what)
         {
-            case NotificationPaused:
+            switch (what)
             {
-                Paused = true;
-                break;
-            }
-            case NotificationUnpaused:
-            {
-                Paused = false;
-                break;
+                case NotificationPaused:
+                {
+                    Paused = true;
+                    break;
+                }
+                case NotificationUnpaused:
+                {
+                    Paused = false;
+                    break;
+                }
             }
         }
-    }
 
-    public void _on_Finished()
-    {
-        Play();
-    }
+        public void _on_Finished()
+        {
+            if (Loop)
+            {
+                Play();
+            }
+        }
 
-    public override void _Ready()
-    {
-        Connect("finished", this, nameof(_on_Finished));
+        public override void _Ready()
+        {
+            Connect("finished", this, nameof(_on_Finished));
+        }
     }
 }

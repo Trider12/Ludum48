@@ -1,12 +1,15 @@
 using Godot;
 
-public class VideoSprite : Sprite
+namespace GlobalGameJam2021.Core
 {
-    public override void _Ready()
+    public class VideoSprite : Sprite
     {
-        var viewportSize = GetViewport().Size;
-        var scale = viewportSize / Texture.GetSize();
-        Position = viewportSize / 2;
-        Scale = scale;
+        public override void _Ready()
+        {
+            var viewportSize = GetViewport().Size;
+            var scale = viewportSize / Texture.GetSize();
+            Position = viewportSize / 2;
+            Scale = scale;
+        }
     }
 }

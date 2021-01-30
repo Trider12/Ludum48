@@ -2,14 +2,14 @@
 {
     public class GameManager
     {
-        static GameManager()
-        {
-        }
-
         private GameManager()
         {
         }
 
         public static GameManager Instance { get; } = new GameManager();
+
+        public InventoryManager InventoryManager { get; set; }
+        public UIManager UIManager { get; set; }
+        public WaypointManager WaypointManager { get; set; }
     }
 }
