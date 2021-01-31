@@ -2,7 +2,7 @@
 {
     public class Settings
     {
-        public bool IsFullscreen { get; set; }
+        public string DisplayMode { get; set; }
         public int MasterVolume { get; set; }
         public string Resolution { get; set; }
     }

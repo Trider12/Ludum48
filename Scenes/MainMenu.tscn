@@ -85,8 +85,13 @@ margin_left = -200.0
 margin_top = -150.0
 margin_right = 200.0
 margin_bottom = 150.0
+rect_min_size = Vector2( 400, 300 )
 popup_exclusive = true
 window_title = "Settings"
+dialog_autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="MarginContainer" type="MarginContainer" parent="SettingsWindow"]
 anchor_right = 1.0
@@ -117,7 +122,7 @@ size_flags_vertical = 1
 custom_fonts/font = SubResource( 4 )
 text = "Resolution"
 
-[node name="OptionButton" type="OptionButton" parent="SettingsWindow/MarginContainer/GridContainer"]
+[node name="ResolutionOptionButton" type="OptionButton" parent="SettingsWindow/MarginContainer/GridContainer"]
 margin_left = 142.0
 margin_right = 270.0
 margin_bottom = 22.0
@@ -127,30 +132,31 @@ __meta__ = {
 }
 
 [node name="Label3" type="Label" parent="SettingsWindow/MarginContainer/GridContainer"]
-margin_top = 33.0
+margin_top = 32.0
 margin_right = 122.0
-margin_bottom = 55.0
+margin_bottom = 54.0
 custom_fonts/font = SubResource( 5 )
-text = "Fullscreen"
+text = "Display Mode"
 
-[node name="CheckBox" type="CheckBox" parent="SettingsWindow/MarginContainer/GridContainer"]
+[node name="DisplayModeOptionButton" type="OptionButton" parent="SettingsWindow/MarginContainer/GridContainer"]
 margin_left = 142.0
 margin_top = 32.0
 margin_right = 270.0
-margin_bottom = 56.0
+margin_bottom = 54.0
+text = "Windowed"
+selected = 0
 
 [node name="Label2" type="Label" parent="SettingsWindow/MarginContainer/GridContainer"]
-margin_top = 66.0
+margin_top = 64.0
 margin_right = 122.0
-margin_bottom = 88.0
+margin_bottom = 86.0
 custom_fonts/font = SubResource( 6 )
 text = "Master Volume"
 
-[node name="ValueSlider" parent="SettingsWindow/MarginContainer/GridContainer" instance=ExtResource( 3 )]
-margin_top = 66.0
+[node name="MasterVolumeValueSlider" parent="SettingsWindow/MarginContainer/GridContainer" instance=ExtResource( 3 )]
+margin_top = 64.0
 margin_right = 270.0
-margin_bottom = 88.0
+margin_bottom = 86.0
 [connection signal="pressed" from="Buttons/PlayButton" to="." method="_on_PlayButton_pressed"]
 [connection signal="pressed" from="Buttons/SettingsButton" to="." method="_on_SettingsButton_pressed"]
 [connection signal="pressed" from="Buttons/QuitButton" to="." method="_on_QuitButton_pressed"]
-[connection signal="confirmed" from="SettingsWindow" to="." method="_on_SettingsWindow_confirmed"]
