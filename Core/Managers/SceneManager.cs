@@ -23,12 +23,13 @@ namespace GlobalGameJam2021.Core.Managers
 
         public void LoadDemoLevel()
         {
-            LoadLevel(_demoLevelScene.Instance());
+            LoadLevel(_demoLevelScene.Instance(), true);
         }
 
         public void LoadLevel(string levelName)
         {
-            GD.Print("Next level");
+            var level = GD.Load<PackedScene>("res://Scenes/" + levelName + ".tscn").Instance();
+            LoadLevel(level);
         }
 
         public void LoadMainMenu()
@@ -39,11 +40,18 @@ namespace GlobalGameJam2021.Core.Managers
             _uiManager.ToggleHUD(false);
         }
 
-        private void LoadLevel(Node level)
+        private void LoadLevel(Node level, bool firstLoad = false)
         {
-            _tree.Root.RemoveChild(_mainMenu);
+            if (firstLoad)
+            {
+                _tree.Root.RemoveChild(_mainMenu);
+                _tree.Root.AddChild(_uiManager);
+            }
+            else
+            {
+                _currentSceneInstance.QueueFree();
+            }
             _currentSceneInstance = level;
-            _tree.Root.AddChild(_uiManager);
             _tree.Root.AddChild(_currentSceneInstance);
             _uiManager.ToggleHUD(true);
         }
