@@ -7,11 +7,6 @@ namespace GlobalGameJam2021.Core.Managers
         private Control _hud;
         private Control _pauseMenu;
 
-        public UIManager()
-        {
-            GameManager.Instance.UIManager = this;
-        }
-
         public override void _Input(InputEvent @event)
         {
             if (@event.IsActionPressed("ui_cancel"))
@@ -23,7 +18,7 @@ namespace GlobalGameJam2021.Core.Managers
         public void _on_MainMenuButton_pressed()
         {
             TogglePause();
-            SceneManager.Instance.LoadMainMenu();
+            GameManager.Instance.SceneManager.LoadMainMenu();
         }
 
         public void _on_PauseButton_pressed()
@@ -46,6 +41,8 @@ namespace GlobalGameJam2021.Core.Managers
         {
             _hud = GetNode<Control>("HUD");
             _pauseMenu = GetNode<Control>("PauseMenu");
+
+            GameManager.Instance.UIManager = this;
         }
 
         public void ToggleHUD(bool visible)

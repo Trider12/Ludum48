@@ -38,16 +38,9 @@ namespace GlobalGameJam2021.Core
             }
         }
 
-        public override void _EnterTree()
-        {
-            // call static constructors
-            _ = GameManager.Instance;
-            _ = SceneManager.Instance;
-        }
-
         public void _on_PlayButton_pressed()
         {
-            SceneManager.Instance.LoadDemoLevel();
+            GameManager.Instance.SceneManager.LoadDemoLevel();
         }
 
         public void _on_QuitButton_pressed()

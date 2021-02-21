@@ -10,7 +10,7 @@ namespace GlobalGameJam2021.Core.Managers
         private SceneTree _tree;
         private UIManager _uiManager;
 
-        private SceneManager()
+        public SceneManager()
         {
             _tree = (SceneTree)Engine.GetMainLoop();
             _mainMenu = _tree.Root.GetNode<MainMenu>("/root/MainMenu"); // start scene
@@ -18,8 +18,6 @@ namespace GlobalGameJam2021.Core.Managers
 
             _demoLevelScene = GD.Load<PackedScene>("res://Scenes/DemoLevel.tscn");
         }
-
-        public static SceneManager Instance { get; } = new SceneManager();
 
         public void LoadDemoLevel()
         {

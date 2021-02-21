@@ -9,6 +9,7 @@
         public static GameManager Instance { get; } = new GameManager();
 
         public InventoryManager InventoryManager { get; set; }
+        public SceneManager SceneManager { get; } = new SceneManager();
         public UIManager UIManager { get; set; }
         public WaypointManager WaypointManager { get; set; }
     }

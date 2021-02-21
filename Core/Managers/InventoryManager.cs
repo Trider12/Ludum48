@@ -7,11 +7,6 @@ namespace GlobalGameJam2021.Core.Managers
     {
         private List<ItemSlot> _itemSlots = new List<ItemSlot>();
 
-        public InventoryManager()
-        {
-            GameManager.Instance.InventoryManager = this;
-        }
-
         public Item HoldingItem { get; private set; } = null;
 
         public override void _Input(InputEvent @event)
@@ -32,6 +27,8 @@ namespace GlobalGameJam2021.Core.Managers
                     _itemSlots.Add(slot);
                 }
             }
+
+            GameManager.Instance.InventoryManager = this;
         }
 
         public bool AddItemToInventory(Item item)

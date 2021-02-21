@@ -11,11 +11,6 @@ namespace GlobalGameJam2021.Core.Managers
         private MovableEntity _player;
         private List<Waypoint> _waypoints = new List<Waypoint>();
 
-        public WaypointManager()
-        {
-            GameManager.Instance.WaypointManager = this;
-        }
-
         [Export]
         private NodePath PlayerNodePath { get; set; }
 
@@ -57,6 +52,8 @@ namespace GlobalGameJam2021.Core.Managers
 
             _currentWaypoint = _waypoints.First();
             _player.GlobalPosition = _currentWaypoint.GlobalPosition;
+
+            GameManager.Instance.WaypointManager = this;
         }
 
         public void OnWaypointClicked(Waypoint waypoint)
@@ -76,7 +73,7 @@ namespace GlobalGameJam2021.Core.Managers
         {
             _player.Disconnect(nameof(MovableEntity.FinishedMovement), this, nameof(ChangeLevel));
 
-            SceneManager.Instance.LoadLevel(levelName);
+            GameManager.Instance.SceneManager.LoadLevel(levelName);
         }
 
         private void DrawTriangle(Vector2 pos, Vector2 dir, float size, Color color)

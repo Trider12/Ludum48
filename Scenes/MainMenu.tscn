@@ -144,7 +144,6 @@ margin_top = 32.0
 margin_right = 270.0
 margin_bottom = 54.0
 text = "Windowed"
-selected = 0
 
 [node name="Label2" type="Label" parent="SettingsWindow/MarginContainer/GridContainer"]
 margin_top = 64.0
