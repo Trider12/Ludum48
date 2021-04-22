@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Global Game Jam 2021", "Global Game Jam 2021.csproj", "{2F4EAC43-F896-44C3-841F-3E4A9074CCA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ludum48", "Ludum48.csproj", "{2F4EAC43-F896-44C3-841F-3E4A9074CCA7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Launcher", "Launcher\Launcher.csproj", "{36942BFC-061B-46B4-99BF-B23A223722CA}"
 EndProject

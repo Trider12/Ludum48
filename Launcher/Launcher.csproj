@@ -37,9 +37,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Global Game Jam 2021.csproj">
+    <ProjectReference Include="..\Ludum48.csproj">
       <Project>{2f4eac43-f896-44c3-841f-3e4a9074cca7}</Project>
-      <Name>Global Game Jam 2021</Name>
+      <Name>Ludum48</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

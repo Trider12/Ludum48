@@ -1,6 +1,8 @@
-﻿namespace GlobalGameJam2021.Core
+using Godot;
+
+namespace Ludum48.Core
 {
-    public class Player : MovableEntity
-    {
-    }
+	public class Player : KinematicBody2D
+	{
+	}
 }

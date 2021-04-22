@@ -1,57 +1,64 @@
 ﻿using Godot;
+using Ludum48.Core.UI;
+using Ludum48.Core.Utility;
+using System.Collections.Generic;
 
-namespace GlobalGameJam2021.Core.Managers
+namespace Ludum48.Core.Managers
 {
-    public class SceneManager
+    public class SceneManager : Node2D
     {
-        private Node _currentSceneInstance;
-        private PackedScene _demoLevelScene;
+        private static readonly Dictionary<string, PackedScene> _levels = PrefabHelper.LoadPrefabsDictionary("res://Scenes/Levels", new string[] { });
         private MainMenu _mainMenu;
         private SceneTree _tree;
-        private UIManager _uiManager;
 
         public SceneManager()
         {
             _tree = (SceneTree)Engine.GetMainLoop();
             _mainMenu = _tree.Root.GetNode<MainMenu>("/root/MainMenu"); // start scene
-            _uiManager = (UIManager)GD.Load<PackedScene>("res://Scenes/UIManager.tscn").Instance();
-
-            _demoLevelScene = GD.Load<PackedScene>("res://Scenes/DemoLevel.tscn");
         }
+
+        [Signal]
+        public delegate void OnLevelChange();
+
+        public Level CurrentLevel { get; private set; } = null;
 
         public void LoadDemoLevel()
         {
-            LoadLevel(_demoLevelScene.Instance(), true);
+            LoadLevel("empty");
         }
 
         public void LoadLevel(string levelName)
         {
-            var level = GD.Load<PackedScene>("res://Scenes/" + levelName + ".tscn").Instance();
-            LoadLevel(level);
+            LoadLevel(_levels[levelName].Instance());
         }
 
         public void LoadMainMenu()
         {
-            _currentSceneInstance.QueueFree();
-            _tree.Root.RemoveChild(_uiManager);
+            _tree.Root.RemoveChild(GameManager.Instance.UIManager);
             _tree.Root.AddChild(_mainMenu);
-            _uiManager.ToggleHUD(false);
+            GameManager.Instance.UIManager.ToggleHUD(false);
         }
 
-        private void LoadLevel(Node level, bool firstLoad = false)
+        private void LoadLevel(Node level)
         {
-            if (firstLoad)
+            EmitSignal(nameof(OnLevelChange));
+
+            if (CurrentLevel == null)
             {
                 _tree.Root.RemoveChild(_mainMenu);
-                _tree.Root.AddChild(_uiManager);
+                _tree.Root.AddChild(GameManager.Instance.UIManager);
             }
             else
             {
-                _currentSceneInstance.QueueFree();
+                CurrentLevel.RemovePlayer();
+                CurrentLevel.QueueFree();
             }
-            _currentSceneInstance = level;
-            _tree.Root.AddChild(_currentSceneInstance);
-            _uiManager.ToggleHUD(true);
+
+            CurrentLevel = (Level)level;
+            _tree.Root.CallDeferred("add_child", CurrentLevel);
+            CurrentLevel.CallDeferred(nameof(CurrentLevel.SpawnPlayer));
+
+            GameManager.Instance.UIManager.ToggleHUD(true);
         }
     }
 }

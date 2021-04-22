@@ -1,4 +1,4 @@
-﻿namespace GlobalGameJam2021.Core
+﻿namespace Ludum48.Core.UI
 {
     public class Settings
     {

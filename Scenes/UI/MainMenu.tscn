@@ -1,8 +1,8 @@
 [gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Assets/Fonts/Roboto/Roboto-Regular.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://Core/MainMenu.cs" type="Script" id=2]
-[ext_resource path="res://Scenes/ValueSlider.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Core/UI/MainMenu.cs" type="Script" id=2]
+[ext_resource path="res://Scenes/UI/ValueSlider.tscn" type="PackedScene" id=3]
 
 [sub_resource type="DynamicFont" id=1]
 size = 30
@@ -156,6 +156,7 @@ text = "Master Volume"
 margin_top = 64.0
 margin_right = 270.0
 margin_bottom = 86.0
+
 [connection signal="pressed" from="Buttons/PlayButton" to="." method="_on_PlayButton_pressed"]
 [connection signal="pressed" from="Buttons/SettingsButton" to="." method="_on_SettingsButton_pressed"]
 [connection signal="pressed" from="Buttons/QuitButton" to="." method="_on_QuitButton_pressed"]
