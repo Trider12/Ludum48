@@ -38,6 +38,7 @@ __meta__ = {
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 visible = false
 scale = Vector2( 2, 2 )
+collision_mask = 2
 __meta__ = {
 "_edit_group_": true,
 "_edit_lock_": true
@@ -120,6 +121,12 @@ __meta__ = {
 
 [node name="Enemy" parent="YSort" instance=ExtResource( 3 )]
 position = Vector2( -989.934, 576.962 )
+
+[node name="Enemy2" parent="YSort" instance=ExtResource( 3 )]
+position = Vector2( 1213.75, 208.269 )
+
+[node name="Enemy3" parent="YSort" instance=ExtResource( 3 )]
+position = Vector2( 10.199, -681.68 )
 
 [node name="Foreground" type="Sprite" parent="."]
 texture = ExtResource( 2 )

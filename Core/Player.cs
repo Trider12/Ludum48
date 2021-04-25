@@ -20,7 +20,6 @@ namespace Ludum48.Core
         private WeaponBase _currentWeapon = null;
         private Timer _dashTimer = new Timer();
         private Node2D _gunSlot;
-        private Area2D _hitbox;
         private float _maxHealth = 1;
         private ReloadBar _reloadBar;
 
@@ -110,8 +109,7 @@ namespace Ludum48.Core
 
             _gunSlot = GetNode<Node2D>("GunSlot");
 
-            _hitbox = GetNode<Area2D>("Hitbox");
-            _hitbox.Connect("area_entered", this, nameof(OnHitboxAreaEntered));
+            _hitBox.Connect("area_entered", this, nameof(OnHitBoxAreaEntered));
 
             UpdateHUD();
 
@@ -207,7 +205,14 @@ namespace Ludum48.Core
 
         protected override void Die()
         {
-            GameManager.Instance.SceneManager.LoadMainMenu();
+            if (Depth < 3)
+            {
+                GameManager.Instance.StartRewind();
+            }
+            else
+            {
+                GameManager.Instance.SceneManager.LoadMainMenu();
+            }
         }
 
         private void Dash()
@@ -246,13 +251,12 @@ namespace Ludum48.Core
             _canDash = true;
         }
 
-        private void OnHitboxAreaEntered(Area2D area)
+        private void OnHitBoxAreaEntered(Area2D area)
         {
-            //if (area.Name.Equals("AttackBox"))
-            //{
-            //    GetDamage((area.GetParent() as Enemy).Damage);
-            //    _animationState.Travel("Hurt");
-            //}
+            if (area.CollisionLayer == 256) // EnemyHitbox
+            {
+                GetDamage(1);
+            }
         }
 
         private void OnLevelChange()

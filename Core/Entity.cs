@@ -10,6 +10,7 @@ namespace Ludum48.Core
         protected List<Bullet> _bullets;
         protected float _currentHealth;
 
+        protected Area2D _hitBox;
         protected Vector2 _velocity = Vector2.Zero;
 
         private TimeIndicator _timeIndicator;
@@ -27,7 +28,7 @@ namespace Ludum48.Core
         }
 
         public bool IsClone { get; set; } = false;
-        public virtual float MaxHealth { get; protected set; } = 100;
+        public virtual float MaxHealth { get; protected set; } = 1;
         protected virtual float Acceleration { get; } = 3000;
         protected virtual float Friction { get; } = 3000;
         protected virtual float MaxSpeed { get; } = 200;
@@ -35,6 +36,9 @@ namespace Ludum48.Core
         public override void _Ready()
         {
             base._Ready();
+
+            _hitBox = GetNode<Area2D>("HitBox");
+            _hitBox.Connect("body_entered", this, nameof(OnHitBoxBodyEntered));
 
             _timeIndicator = GetNode<TimeIndicator>("TimeIndicator");
         }
@@ -61,5 +65,17 @@ namespace Ludum48.Core
         }
 
         protected abstract void Die();
+
+        private void OnHitBoxBodyEntered(Node body)
+        {
+            var bullet = body as Bullet;
+
+            if (bullet == null)
+            {
+                return;
+            }
+
+            GetDamage(bullet.Pop());
+        }
     }
 }
