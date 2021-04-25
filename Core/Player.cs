@@ -15,6 +15,7 @@ namespace Ludum48.Core
         private const float DashForce = 400;
 
         private static readonly Dictionary<string, PackedScene> _weaponScenes = PrefabHelper.LoadPrefabsDictionary("res://Scenes/Weapons");
+        private Camera2D _camera;
         private bool _canDash = true;
         private int _currentFrame = 0;
         private WeaponBase _currentWeapon = null;
@@ -35,8 +36,6 @@ namespace Ludum48.Core
 
         [Signal]
         public delegate void OnFrameChanged(bool rewind);
-
-        public Camera2D Camera { get; private set; }
 
         public int CurrentFrame
         {
@@ -94,7 +93,7 @@ namespace Ludum48.Core
             {
                 Dash();
             }
-            if (inputEvent.IsActionPressed("rewind") && CanRewind())
+            if (inputEvent.IsActionPressed("rewind"))
             {
                 GameManager.Instance.StartRewind();
             }
@@ -104,7 +103,7 @@ namespace Ludum48.Core
         {
             base._Ready();
 
-            Camera = GetNode<Camera2D>("Camera2D");
+            _camera = GetNode<Camera2D>("Camera2D");
 
             _reloadBar = GetNode<ReloadBar>("ReloadBar");
             _reloadBar.Connect(nameof(ReloadBar.ReloadFinished), this, nameof(OnReloadBarFinished));
@@ -125,24 +124,21 @@ namespace Ludum48.Core
             GameManager.Instance.SceneManager.Connect(nameof(SceneManager.OnLevelChange), this, nameof(OnLevelChange));
         }
 
+        public void Activate(bool value)
+        {
+            SetProcessInput(value);
+            _camera.Current = value;
+            _currentWeapon.SetProcess(value);
+        }
+
         public void ApplyImpulse(Vector2 velocity)
         {
             _velocity += velocity;
         }
 
-        public void FillRemainingFrames() // when we are not the Main Player and don't have enough frames
+        public bool CanRewind()
         {
-            var tuple = SavedFrames.Last.Value;
-
-            while (SavedFrames.Count < GameManager.MaxFramesPlayed * FrameFactor)
-            {
-                SavedFrames.AddLast(tuple);
-            }
-
-            foreach (var bullet in _bullets)
-            {
-                bullet.FillRemainingFrames();
-            }
+            return TimeState != TimeState.Rewind && Depth < 3 && SavedFrames.Count >= GameManager.MaxFramesPlayed;
         }
 
         public override void PhysicsProcess(float delta)
@@ -154,16 +150,10 @@ namespace Ludum48.Core
 
             if (!inputVector.IsEqualApprox(Vector2.Zero))
             {
-                _animationTree.Set("parameters/Idle/blend_position", inputVector);
-                _animationTree.Set("parameters/Run/blend_position", inputVector);
-                _animationState.Travel("Run");
-
                 _velocity = _velocity.MoveToward(inputVector * MaxSpeed, Acceleration * delta);
             }
             else
             {
-                _animationState.Travel("Idle");
-
                 _velocity = _velocity.MoveToward(Vector2.Zero, Friction * delta);
             }
 
@@ -196,6 +186,11 @@ namespace Ludum48.Core
             _timeIndicator.ChangeColor(color);
         }
 
+        public void UpdateAmmoCount()
+        {
+            GameManager.Instance.UIManager.UpdateAmmoCount(_currentWeapon.AmmoCount);
+        }
+
         protected override void CustomNormalLogic()
         {
             _currentFrame = System.Math.Min(_currentFrame + 1, GameManager.MaxFramesPlayed * FrameFactor);
@@ -224,11 +219,6 @@ namespace Ludum48.Core
         protected override void Die()
         {
             GameManager.Instance.SceneManager.LoadMainMenu();
-        }
-
-        private bool CanRewind()
-        {
-            return TimeState != TimeState.Rewind && Depth < 3 && SavedFrames.Count >= GameManager.MaxFramesPlayed;
         }
 
         private void Dash()

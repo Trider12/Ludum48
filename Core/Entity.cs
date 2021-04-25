@@ -1,14 +1,10 @@
-﻿using Godot;
-using Ludum48.Core.Weapons;
+﻿using Ludum48.Core.Weapons;
 using System.Collections.Generic;
 
 namespace Ludum48.Core
 {
     public abstract class Entity : TimeObject
     {
-        protected AnimationPlayer _animationPlayer = null;
-        protected AnimationNodeStateMachinePlayback _animationState = null;
-        protected AnimationTree _animationTree = null;
         protected List<Bullet> _bullets;
         protected float _currentHealth;
 

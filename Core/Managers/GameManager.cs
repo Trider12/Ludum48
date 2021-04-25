@@ -10,6 +10,7 @@ namespace Ludum48.Core.Managers
         public const int MaxFramesPlayed = RewindTime * 60;
         public const int MaxFramesStored = MaxFramesPlayed * 8;
         public const int RewindTime = 3;
+
         private static PackedScene PlayerScene = GD.Load<PackedScene>("res://Scenes/Player.tscn");
         private List<TimeObject> _timeObjects = new List<TimeObject>();
         private LinkedList<Player> Players = new LinkedList<Player>();
@@ -32,14 +33,8 @@ namespace Ludum48.Core.Managers
 
         public void NewPlayer()
         {
-            Player.SetProcessInput(false);
-            Player.Camera.Current = false;
+            Player.Activate(false);
             Player.ToggleTimeIndicator(true, MainPlayer.Depth == 1 ? Colors.Green : MainPlayer.Depth == 2 ? Colors.Yellow : Colors.Red);
-
-            if (Player != MainPlayer)
-            {
-                //Player.FillRemainingFrames();
-            }
 
             var oldPlayer = Player;
 
@@ -47,6 +42,7 @@ namespace Ludum48.Core.Managers
             SceneManager.CurrentLevel.SpawnPlayer();
             Player.GlobalPosition = oldPlayer.GlobalPosition;
             Player.GlobalRotation = oldPlayer.GlobalRotation;
+            Player.UpdateAmmoCount();
             Players.AddLast(Player);
         }
 
@@ -63,15 +59,16 @@ namespace Ludum48.Core.Managers
             {
                 Unregister(player);
 
-                player.SetProcessInput(false);
-                player.Camera.Current = false;
+                player.Activate(false);
                 player.QueueFree();
             }
 
+            Players.Clear();
+
             Player = MainPlayer;
-            Player.SetProcessInput(true);
-            Player.Camera.Current = true;
+            Player.Activate(true);
             Player.ToggleTimeIndicator(false, Colors.White);
+            Player.UpdateAmmoCount();
         }
 
         public void SlowDown()
@@ -111,6 +108,11 @@ namespace Ludum48.Core.Managers
 
         public void StartRewind()
         {
+            if (!MainPlayer.CanRewind())
+            {
+                return;
+            }
+
             UIManager.ToggleRewindScreen(true);
             UIManager.ToggleTimer(true);
 

@@ -35,15 +35,6 @@ namespace Ludum48.Core.Weapons
             _timer.Start(LifeTime);
         }
 
-        public void FillRemainingFrames()
-        {
-            var tuple = SavedFrames.Last.Value;
-            while (SavedFrames.Count < GameManager.MaxFramesPlayed * FrameFactor)
-            {
-                SavedFrames.AddLast(tuple);
-            }
-        }
-
         public override void PhysicsProcess(float delta)
         {
             var collision = MoveAndCollide(Direction * Speed * delta);
