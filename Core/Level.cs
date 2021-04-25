@@ -1,4 +1,5 @@
 using Godot;
+using Ludum48.Core.Managers;
 
 namespace Ludum48.Core
 {
@@ -10,10 +11,12 @@ namespace Ludum48.Core
 
         public void RemovePlayer()
         {
+            RemoveChild(GameManager.Instance.Player);
         }
 
         public void SpawnPlayer()
         {
+            AddChild(GameManager.Instance.Player);
         }
 
         private void OnLevelCleared()

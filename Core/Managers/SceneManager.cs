@@ -34,6 +34,12 @@ namespace Ludum48.Core.Managers
 
         public void LoadMainMenu()
         {
+            GameManager.Instance.Player.Reset();
+
+            CurrentLevel.RemovePlayer();
+            CurrentLevel.QueueFree();
+            CurrentLevel = null;
+
             _tree.Root.RemoveChild(GameManager.Instance.UIManager);
             _tree.Root.AddChild(_mainMenu);
             GameManager.Instance.UIManager.ToggleHUD(false);
