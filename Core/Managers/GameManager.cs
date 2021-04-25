@@ -61,7 +61,8 @@ namespace Ludum48.Core.Managers
         public void StartNormal()
         {
             UIManager.ToggleReplayScreen(false);
-            UIManager.ToggleTimer(false);
+            //UIManager.ToggleTimer(false);
+            UIManager.UpdateTimer(0, 0, false);
 
             foreach (var obj in _timeObjects)
             {
@@ -101,7 +102,7 @@ namespace Ludum48.Core.Managers
             }
 
             UIManager.ToggleRewindScreen(true);
-            UIManager.ToggleTimer(true);
+            //UIManager.ToggleTimer(true);
 
             foreach (var obj in _timeObjects)
             {
@@ -156,8 +157,8 @@ namespace Ludum48.Core.Managers
 
         private void OnMainPlayerFrameChanged(bool rewind)
         {
-            float time = RewindTime * (1f - 1f * MainPlayer.CurrentFrame / MaxFramesPlayed);
-            UIManager.UpdateTimer(time, MainPlayer.Depth, rewind);
+            float percent = 1f * MainPlayer.CurrentFrame / MaxFramesPlayed;
+            UIManager.UpdateTimer(percent, MainPlayer.Depth, rewind);
         }
 
         private void ResetEnemies()

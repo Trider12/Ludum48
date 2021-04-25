@@ -1,4 +1,5 @@
 using Godot;
+using Ludum48.Core.UI;
 
 namespace Ludum48.Core.Managers
 {
@@ -9,6 +10,7 @@ namespace Ludum48.Core.Managers
         private const int HeartValue = 10;
 
         private TextureRect _ammoTexture;
+        private Clock _clock;
         private TextureRect _healthEmptyTexture;
         private TextureRect _healthFullTexture;
 
@@ -57,6 +59,7 @@ namespace Ludum48.Core.Managers
             _replayScreen = GetNode<ColorRect>("ReplayScreen");
             _timerLabel = GetNode<Label>("HUD/Timer/Label");
             _timerRect = GetNode<ColorRect>("HUD/Timer");
+            _clock = GetNode<Clock>("HUD/Clock");
 
             _ammoTexture = GetNode<TextureRect>("HUD/LowerLeft/AmmoBar");
             _healthEmptyTexture = GetNode<TextureRect>("HUD/LowerLeft/HealthEmpty");
@@ -78,10 +81,11 @@ namespace Ludum48.Core.Managers
             _rewindScreen.Visible = visible;
         }
 
-        public void ToggleTimer(bool visible)
-        {
-            _timerRect.Visible = visible;
-        }
+        //public void ToggleTimer(bool visible)
+        //{
+        //    //_timerRect.Visible = visible;
+        //    _clock.Visible = visible;
+        //}
 
         public void UpdateAmmoCount(int count)
         {
@@ -103,10 +107,12 @@ namespace Ludum48.Core.Managers
             ((AtlasTexture)_healthFullTexture.Texture).Region = new Rect2(0, 0, halfHeartsCount * HeartSize / 2, HeartSize);
         }
 
-        public void UpdateTimer(float time, int depth, bool rewind)
+        public void UpdateTimer(float percent, int depth, bool rewind)
         {
-            _timerRect.Color = rewind || depth == 0 ? Colors.White : depth == 1 ? Colors.Green : depth == 2 ? Colors.Yellow : Colors.Red;
-            _timerLabel.Text = time.ToString("0.00");
+            //_timerRect.Color = rewind || depth == 0 ? Colors.White : depth == 1 ? Colors.Green : depth == 2 ? Colors.Yellow : Colors.Red;
+            //_timerLabel.Text = percent.ToString("0.00");
+
+            _clock.UpdateTime(percent, depth);
         }
 
         private void TogglePause()

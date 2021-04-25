@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/noise.png-9c16686ee44b4e4193548cb8081da1f5.stex"
+path="res://.import/clock_arrow.png-4392aa8c0ca80470dc21f7238e2005fb.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Textures/noise.png"
-dest_files=[ "res://.import/noise.png-9c16686ee44b4e4193548cb8081da1f5.stex" ]
+source_file="res://Assets/Textures/UI/clock_arrow.png"
+dest_files=[ "res://.import/clock_arrow.png-4392aa8c0ca80470dc21f7238e2005fb.stex" ]
 
 [params]
 
@@ -29,6 +29,6 @@ process/premult_alpha=false
 process/HDR_as_SRGB=false
 process/invert_color=false
 stream=false
-size_limit=0
+size_limit=200
 detect_3d=true
 svg/scale=1.0

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/white.png-6561663424a539e3a57182325a70131e.stex"
+path="res://.import/clock.png-07697a3640ad1aed55c3094f62d491bd.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Textures/white.png"
-dest_files=[ "res://.import/white.png-6561663424a539e3a57182325a70131e.stex" ]
+source_file="res://Assets/Textures/UI/clock.png"
+dest_files=[ "res://.import/clock.png-07697a3640ad1aed55c3094f62d491bd.stex" ]
 
 [params]
 
@@ -29,6 +29,6 @@ process/premult_alpha=false
 process/HDR_as_SRGB=false
 process/invert_color=false
 stream=false
-size_limit=0
+size_limit=200
 detect_3d=true
 svg/scale=1.0
