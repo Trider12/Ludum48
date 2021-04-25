@@ -33,7 +33,7 @@ window/stretch/aspect="keep"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "ui_design_tool" )
+enabled=PoolStringArray( "res://addons/ui_design_tool/plugin.cfg" )
 
 [input]
 

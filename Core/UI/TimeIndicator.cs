@@ -17,6 +17,7 @@ namespace GlobalGameJam2021.Core.UI
         {
             _offset = Position;
             _parent = GetParent<Node2D>();
+            ChangeColor(Colors.White);
         }
 
         public void ChangeColor(Color color)

@@ -24,7 +24,7 @@ namespace Ludum48.Core.Managers
 
         public void LoadDemoLevel()
         {
-            LoadLevel("empty");
+            LoadLevel("level1");
         }
 
         public void LoadLevel(string levelName)

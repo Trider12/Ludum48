@@ -1,5 +1,4 @@
-﻿using GlobalGameJam2021.Core.UI;
-using Godot;
+﻿using Godot;
 using Ludum48.Core.Managers;
 using Ludum48.Core.UI;
 using Ludum48.Core.Utility;
@@ -24,8 +23,7 @@ namespace Ludum48.Core
         private Area2D _hitbox;
         private float _maxHealth = 1;
         private ReloadBar _reloadBar;
-        private TimeIndicator _timeIndicator;
-        private Vector2 _velocity = Vector2.Zero;
+
         private List<WeaponBase> _weapons = _weaponScenes.Select(kv => (WeaponBase)kv.Value.Instance()).ToList();
 
         public Player() : base()
@@ -63,12 +61,14 @@ namespace Ludum48.Core
         {
             get { return _maxHealth; }
 
-            set
+            protected set
             {
                 _maxHealth = value;
                 GameManager.Instance.UIManager.UpdateHealth(_currentHealth, _maxHealth);
             }
         }
+
+        protected override float MaxSpeed { get; } = 300f;
 
         public override void _Input(InputEvent inputEvent)
         {
@@ -113,8 +113,6 @@ namespace Ludum48.Core
             _hitbox = GetNode<Area2D>("Hitbox");
             _hitbox.Connect("area_entered", this, nameof(OnHitboxAreaEntered));
 
-            _timeIndicator = GetNode<TimeIndicator>("TimeIndicator");
-
             UpdateHUD();
 
             EquipWeapon();
@@ -143,18 +141,15 @@ namespace Ludum48.Core
 
         public override void PhysicsProcess(float delta)
         {
-            Vector2 inputVector;
-            inputVector.x = Input.GetActionStrength("ui_right") - Input.GetActionStrength("ui_left");
-            inputVector.y = Input.GetActionStrength("ui_down") - Input.GetActionStrength("ui_up");
-            inputVector = inputVector.Normalized();
+            var inputVector = new Vector2(Input.GetActionStrength("ui_right") - Input.GetActionStrength("ui_left"), Input.GetActionStrength("ui_down") - Input.GetActionStrength("ui_up")).Normalized();
 
-            if (!inputVector.IsEqualApprox(Vector2.Zero))
+            if (inputVector.IsEqualApprox(Vector2.Zero))
             {
-                _velocity = _velocity.MoveToward(inputVector * MaxSpeed, Acceleration * delta);
+                _velocity = _velocity.MoveToward(Vector2.Zero, Friction * delta);
             }
             else
             {
-                _velocity = _velocity.MoveToward(Vector2.Zero, Friction * delta);
+                _velocity = _velocity.MoveToward(inputVector * MaxSpeed, Acceleration * delta);
             }
 
             _velocity = MoveAndSlide(_velocity);
@@ -178,12 +173,6 @@ namespace Ludum48.Core
             _velocity = Vector2.Zero;
 
             EquipWeapon(0);
-        }
-
-        public void ToggleTimeIndicator(bool visible, Color color)
-        {
-            _timeIndicator.Visible = visible;
-            _timeIndicator.ChangeColor(color);
         }
 
         public void UpdateAmmoCount()
@@ -212,7 +201,7 @@ namespace Ludum48.Core
 
             if (CurrentFrame == 0)
             {
-                GameManager.Instance.StartReplay();
+                GameManager.Instance.StartReplay(true);
             }
         }
 

@@ -1,4 +1,6 @@
-﻿using Ludum48.Core.Weapons;
+﻿using GlobalGameJam2021.Core.UI;
+using Godot;
+using Ludum48.Core.Weapons;
 using System.Collections.Generic;
 
 namespace Ludum48.Core
@@ -7,6 +9,10 @@ namespace Ludum48.Core
     {
         protected List<Bullet> _bullets;
         protected float _currentHealth;
+
+        protected Vector2 _velocity = Vector2.Zero;
+
+        private TimeIndicator _timeIndicator;
 
         public Entity()
         {
@@ -20,13 +26,18 @@ namespace Ludum48.Core
             protected set { _currentHealth = value > 0 ? (value < MaxHealth ? value : MaxHealth) : 0; }
         }
 
-        public virtual float MaxHealth { get; set; } = 100;
-
-        protected virtual float Acceleration { get; } = 1000;
-
-        protected virtual float Friction { get; } = 500;
-
+        public bool IsClone { get; set; } = false;
+        public virtual float MaxHealth { get; protected set; } = 100;
+        protected virtual float Acceleration { get; } = 3000;
+        protected virtual float Friction { get; } = 3000;
         protected virtual float MaxSpeed { get; } = 200;
+
+        public override void _Ready()
+        {
+            base._Ready();
+
+            _timeIndicator = GetNode<TimeIndicator>("TimeIndicator");
+        }
 
         public virtual void GetDamage(float damage)
         {
@@ -42,6 +53,11 @@ namespace Ludum48.Core
         {
             _bullets.Add(bullet);
             bullet.Owner = this;
+        }
+
+        public void ToggleTimeIndicator(Color color)
+        {
+            _timeIndicator.ChangeColor(color);
         }
 
         protected abstract void Die();

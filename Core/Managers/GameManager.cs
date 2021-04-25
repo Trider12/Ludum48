@@ -1,4 +1,5 @@
 ﻿using Godot;
+using Ludum48.Core.Enemies;
 using System.Collections.Generic;
 
 namespace Ludum48.Core.Managers
@@ -11,9 +12,14 @@ namespace Ludum48.Core.Managers
         public const int MaxFramesStored = MaxFramesPlayed * 8;
         public const int RewindTime = 3;
 
+        private static PackedScene EnemyScene = GD.Load<PackedScene>("res://Scenes/Enemies/Enemy1.tscn");
         private static PackedScene PlayerScene = GD.Load<PackedScene>("res://Scenes/Player.tscn");
+
+        private List<Enemy> _currentEnemies = new List<Enemy>();
+        private List<Enemy> _enemyClones = new List<Enemy>();
+        private List<Enemy> _originalEnemies = new List<Enemy>();
+        private LinkedList<Player> _players = new LinkedList<Player>();
         private List<TimeObject> _timeObjects = new List<TimeObject>();
-        private LinkedList<Player> Players = new LinkedList<Player>();
 
         private GameManager()
         {
@@ -31,51 +37,24 @@ namespace Ludum48.Core.Managers
 
         public UIManager UIManager { get; } = (UIManager)GD.Load<PackedScene>("res://Scenes/UI/UIManager.tscn").Instance();
 
-        public void NewPlayer()
-        {
-            Player.Activate(false);
-            Player.ToggleTimeIndicator(true, MainPlayer.Depth == 1 ? Colors.Green : MainPlayer.Depth == 2 ? Colors.Yellow : Colors.Red);
-
-            var oldPlayer = Player;
-
-            Player = (Player)PlayerScene.Instance();
-            SceneManager.CurrentLevel.SpawnPlayer();
-            Player.GlobalPosition = oldPlayer.GlobalPosition;
-            Player.GlobalRotation = oldPlayer.GlobalRotation;
-            Player.UpdateAmmoCount();
-            Players.AddLast(Player);
-        }
-
         public void Register(TimeObject timeObject)
         {
             _timeObjects.Add(timeObject);
 
             timeObject.FrameFactor = System.Math.Max(1, MainPlayer.Depth * 2);
-        }
 
-        public void ResetPlayer()
-        {
-            foreach (var player in Players)
+            var enemy = timeObject as Enemy;
+
+            if (enemy != null)
             {
-                Unregister(player);
-
-                player.Activate(false);
-                player.QueueFree();
-            }
-
-            Players.Clear();
-
-            Player = MainPlayer;
-            Player.Activate(true);
-            Player.ToggleTimeIndicator(false, Colors.White);
-            Player.UpdateAmmoCount();
-        }
-
-        public void SlowDown()
-        {
-            foreach (var obj in _timeObjects)
-            {
-                obj.Depth++;
+                if (enemy.IsClone)
+                {
+                    _enemyClones.Add(enemy);
+                }
+                else
+                {
+                    _originalEnemies.Add(enemy);
+                }
             }
         }
 
@@ -90,20 +69,28 @@ namespace Ludum48.Core.Managers
             }
 
             ResetPlayer();
+            ResetEnemies();
         }
 
-        public void StartReplay()
+        public void StartReplay(bool slowdown)
         {
             UIManager.ToggleRewindScreen(false);
             UIManager.ToggleReplayScreen(true);
 
             foreach (var obj in _timeObjects)
             {
-                obj.Depth++;
+                if (slowdown)
+                {
+                    obj.Depth++;
+                }
+
                 obj.StartReplay();
             }
 
-            NewPlayer();
+            var color = MainPlayer.Depth == 1 ? Colors.Green : MainPlayer.Depth == 2 ? Colors.Yellow : Colors.Red;
+
+            NewPlayer(color);
+            NewEnemies(color);
         }
 
         public void StartRewind()
@@ -127,10 +114,86 @@ namespace Ludum48.Core.Managers
             _timeObjects.Remove(timeObject);
         }
 
+        private void NewEnemies(Color color)
+        {
+            if (_currentEnemies.Count == 0)
+            {
+                _currentEnemies = new List<Enemy>(_originalEnemies);
+            }
+
+            foreach (var enemy in _currentEnemies)
+            {
+                enemy.ToggleTimeIndicator(color);
+            }
+
+            _currentEnemies.Clear();
+
+            foreach (var enemy in _originalEnemies)
+            {
+                var clone = EnemyScene.Instance<Enemy>();
+                clone.IsClone = true;
+                clone.GlobalPosition = enemy.GlobalPosition;
+                clone.GlobalRotation = enemy.GlobalRotation;
+                SceneManager.CurrentLevel.SpawnEntity(clone);
+                _currentEnemies.Add(clone);
+            }
+        }
+
+        private void NewPlayer(Color color)
+        {
+            Player.Activate(false);
+            Player.ToggleTimeIndicator(color);
+
+            var oldPlayer = Player;
+
+            Player = PlayerScene.Instance<Player>();
+            SceneManager.CurrentLevel.SpawnPlayer();
+            Player.GlobalPosition = oldPlayer.GlobalPosition;
+            Player.GlobalRotation = oldPlayer.GlobalRotation;
+            Player.UpdateAmmoCount();
+            _players.AddLast(Player);
+        }
+
         private void OnMainPlayerFrameChanged(bool rewind)
         {
             float time = RewindTime * (1f - 1f * MainPlayer.CurrentFrame / MaxFramesPlayed);
             UIManager.UpdateTimer(time, MainPlayer.Depth, rewind);
+        }
+
+        private void ResetEnemies()
+        {
+            foreach (var clone in _enemyClones)
+            {
+                Unregister(clone);
+
+                clone.QueueFree();
+            }
+
+            _enemyClones.Clear();
+            _currentEnemies.Clear();
+
+            foreach (var enemy in _originalEnemies)
+            {
+                enemy.ToggleTimeIndicator(Colors.White);
+            }
+        }
+
+        private void ResetPlayer()
+        {
+            foreach (var player in _players)
+            {
+                Unregister(player);
+
+                player.Activate(false);
+                player.QueueFree();
+            }
+
+            _players.Clear();
+
+            Player = MainPlayer;
+            Player.Activate(true);
+            Player.ToggleTimeIndicator(Colors.White);
+            Player.UpdateAmmoCount();
         }
     }
 }
