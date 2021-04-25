@@ -7,13 +7,14 @@ namespace Ludum48.Core.Enemies
 {
     public class Enemy : Entity
     {
+        protected float SightRadius = 800;
+        protected float StopAtRadius = 50;
+        protected float WalkRadius = 600;
+
         private Navigation2D _navigation2D;
         private List<Vector2> _path = new List<Vector2>();
         private float _pathUpdateInterval = 0.5f;
         private Timer _pathUpdateTimer = new Timer();
-        private float SightRadius = 800;
-        private float StopAtRadius = 50;
-        private float WalkRadius = 600;
 
         public Enemy() : base()
         {

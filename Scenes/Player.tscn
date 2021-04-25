@@ -34,6 +34,10 @@ shape = SubResource( 1 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
+limit_left = -1920
+limit_top = -1080
+limit_right = 1920
+limit_bottom = 1080
 
 [node name="Hitbox" type="Area2D" parent="."]
 collision_layer = 32
