@@ -62,7 +62,7 @@ namespace Ludum48.Core.Managers
 
             CurrentLevel = (Level)level;
             _tree.Root.CallDeferred("add_child", CurrentLevel);
-            CurrentLevel.CallDeferred(nameof(CurrentLevel.SpawnPlayer));
+            CurrentLevel.CallDeferred(nameof(CurrentLevel.SpawnPlayer), true);
 
             GameManager.Instance.UIManager.ToggleHUD(true);
         }

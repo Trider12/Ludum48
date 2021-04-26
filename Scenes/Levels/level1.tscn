@@ -133,3 +133,9 @@ texture = ExtResource( 2 )
 __meta__ = {
 "_edit_lock_": true
 }
+
+[node name="PlayerSpawn" type="Node2D" parent="."]
+position = Vector2( 222.46, 580.585 )
+__meta__ = {
+"_edit_lock_": true
+}

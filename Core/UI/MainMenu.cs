@@ -42,11 +42,6 @@ namespace Ludum48.Core.UI
             Font.Size = 10;
         }
 
-        public void _on_PlayButton_pressed()
-        {
-            GameManager.Instance.SceneManager.LoadDemoLevel();
-        }
-
         public void _on_QuitButton_pressed()
         {
             GetTree().Quit();
@@ -80,7 +75,9 @@ namespace Ludum48.Core.UI
 
         public override void _Ready()
         {
-            _ = GameManager.Instance;
+            GetNode<Button>("Buttons/Level1Button").Connect("pressed", this, nameof(OnLevel1ButtonPressed));
+            GetNode<Button>("Buttons/Level2Button").Connect("pressed", this, nameof(OnLevel2ButtonPressed));
+            GetNode<Button>("Buttons/Level3Button").Connect("pressed", this, nameof(OnLevel3ButtonPressed));
 
             _settingsWindow = GetNode<ConfirmationDialog>("SettingsWindow");
 
@@ -156,6 +153,21 @@ namespace Ludum48.Core.UI
             GD.Print("Window Resolution: " + OS.WindowSize + "; Viewport Resolution: " + GetViewport().Size);
 
             AudioServer.SetBusVolumeDb(AudioServer.GetBusIndex("Master"), GD.Linear2Db(_settings.MasterVolume / 100f));
+        }
+
+        private void OnLevel1ButtonPressed()
+        {
+            GameManager.Instance.SceneManager.LoadLevel("level1");
+        }
+
+        private void OnLevel2ButtonPressed()
+        {
+            GameManager.Instance.SceneManager.LoadLevel("level2");
+        }
+
+        private void OnLevel3ButtonPressed()
+        {
+            GameManager.Instance.SceneManager.LoadLevel("level3");
         }
     }
 }

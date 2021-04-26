@@ -52,23 +52,39 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PlayButton" type="Button" parent="Buttons"]
+[node name="Level1Button" type="Button" parent="Buttons"]
 margin_right = 384.0
-margin_bottom = 130.0
+margin_bottom = 70.0
 size_flags_vertical = 3
 custom_fonts/font = SubResource( 1 )
-text = "Play"
+text = "Level 1"
+
+[node name="Level2Button" type="Button" parent="Buttons"]
+margin_top = 90.0
+margin_right = 384.0
+margin_bottom = 160.0
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 1 )
+text = "Level 2"
+
+[node name="Level3Button" type="Button" parent="Buttons"]
+margin_top = 180.0
+margin_right = 384.0
+margin_bottom = 251.0
+size_flags_vertical = 3
+custom_fonts/font = SubResource( 1 )
+text = "Level 2"
 
 [node name="SettingsButton" type="Button" parent="Buttons"]
-margin_top = 150.0
+margin_top = 271.0
 margin_right = 384.0
-margin_bottom = 281.0
+margin_bottom = 341.0
 size_flags_vertical = 3
 custom_fonts/font = SubResource( 2 )
 text = "Settings"
 
 [node name="QuitButton" type="Button" parent="Buttons"]
-margin_top = 301.0
+margin_top = 361.0
 margin_right = 384.0
 margin_bottom = 432.0
 size_flags_vertical = 3
@@ -76,7 +92,6 @@ custom_fonts/font = SubResource( 3 )
 text = "Quit"
 
 [node name="SettingsWindow" type="ConfirmationDialog" parent="."]
-visible = true
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -157,6 +172,5 @@ margin_top = 64.0
 margin_right = 270.0
 margin_bottom = 86.0
 
-[connection signal="pressed" from="Buttons/PlayButton" to="." method="_on_PlayButton_pressed"]
 [connection signal="pressed" from="Buttons/SettingsButton" to="." method="_on_SettingsButton_pressed"]
 [connection signal="pressed" from="Buttons/QuitButton" to="." method="_on_QuitButton_pressed"]
