@@ -32,12 +32,18 @@ namespace Ludum48.Core.Managers
 
         public UIManager UIManager { get; } = (UIManager)GD.Load<PackedScene>("res://Scenes/UI/UIManager.tscn").Instance();
 
+        public void LoadMenu()
+        {
+            ResetGame();
+            UIManager.UpdateTimeScale(MainPlayer.TimeScale);
+            SceneManager.LoadMainMenu();
+        }
+
         public void OnPlayerDeath(Enemy source)
         {
             if (MainPlayer.Depth > 0)
             {
-                ResetGame();
-                SceneManager.LoadMainMenu();
+                LoadMenu();
             }
             else
             {
@@ -152,8 +158,6 @@ namespace Ludum48.Core.Managers
             MainPlayer.Connect(nameof(Player.OnFrameChanged), this, nameof(OnMainPlayerFrameChanged));
 
             Player = MainPlayer;
-
-            UIManager.UpdateTimeScale(MainPlayer.TimeScale);
         }
 
         private void ResetPlayer()

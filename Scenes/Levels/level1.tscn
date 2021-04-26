@@ -1,9 +1,11 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Assets/Textures/World/bg1.png" type="Texture" id=1]
 [ext_resource path="res://Assets/Textures/World/fg1.png" type="Texture" id=2]
 [ext_resource path="res://Scenes/Enemies/Bug.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Core/Level.cs" type="Script" id=4]
+[ext_resource path="res://Scenes/Enemies/Worm.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Assets/Music/Level1.wav" type="AudioStream" id=6]
 
 [sub_resource type="NavigationPolygon" id=1]
 vertices = PoolVector2Array( 291.062, -357.575, 687.175, -519.477, 403.419, -249.872, 286.011, -264.972, 231.572, -380.586, 174.326, -337.932, -179.944, -393.551, -221.474, -446.408, -549.509, -18.865, -546.839, -77.598, 202.949, -255.431, 194.819, 123.302, -166.98, 428.714, -206.337, 392.333, 268.237, 126.299, 949.922, -290.633, 937.208, -46.9562, 569.396, 196.719, 504.969, 404.984, 949.922, 135.271, 943.565, 351.402, 738.029, 516.678, 320.601, 520.916, -221.474, -342.582, -312.086, -331.255, 70.8772, 438.051, -282.619, 409.284, -600.912, 4.76379, -929.123, 514.051, -943.123, -511.949, -739.123, -507.949, -729.712, -436.67, -657.631, -400.629, -585.55, -435.335, -563.123, -505.949, -650.957, -16.1953, -307.742, 460.786, 208.877, 452.051, -340.402, -391.663, -596.228, -85.607, -642.948, -68.2541, -304.535, -435.082, -274.143, 500.398, -101.123, 522.051, -177.123, 480.051 )
@@ -15,6 +17,10 @@ script = ExtResource( 4 )
 __meta__ = {
 "_edit_lock_": true
 }
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 6 )
+autoplay = true
 
 [node name="Background" type="Sprite" parent="."]
 texture = ExtResource( 1 )
@@ -119,14 +125,23 @@ __meta__ = {
 "_edit_lock_": true
 }
 
-[node name="Enemy" parent="YSort" instance=ExtResource( 3 )]
+[node name="Bug" parent="YSort" instance=ExtResource( 3 )]
 position = Vector2( -989.934, 576.962 )
 
-[node name="Enemy2" parent="YSort" instance=ExtResource( 3 )]
+[node name="Bug2" parent="YSort" instance=ExtResource( 3 )]
 position = Vector2( 1213.75, 208.269 )
 
-[node name="Enemy3" parent="YSort" instance=ExtResource( 3 )]
+[node name="Bug3" parent="YSort" instance=ExtResource( 3 )]
 position = Vector2( 10.199, -681.68 )
+
+[node name="Worm" parent="YSort" instance=ExtResource( 5 )]
+position = Vector2( -864.521, 101.708 )
+
+[node name="Worm2" parent="YSort" instance=ExtResource( 5 )]
+position = Vector2( 1538.34, -139.276 )
+
+[node name="Worm3" parent="YSort" instance=ExtResource( 5 )]
+position = Vector2( -1663.79, 23.0848 )
 
 [node name="Foreground" type="Sprite" parent="."]
 texture = ExtResource( 2 )

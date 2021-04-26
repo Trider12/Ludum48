@@ -33,7 +33,7 @@ namespace Ludum48.Core.Managers
         public void _on_MainMenuButton_pressed()
         {
             TogglePause();
-            GameManager.Instance.SceneManager.LoadMainMenu();
+            GameManager.Instance.LoadMenu();
         }
 
         public void _on_PauseButton_pressed()
