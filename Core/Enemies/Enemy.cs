@@ -76,9 +76,12 @@ namespace Ludum48.Core.Enemies
                             UpdatePath();
                         }
 
-                        var velocity = (_path[1] - GlobalPosition).Normalized() * MaxSpeed;
+                        if (_path.Count > 0)
+                        {
+                            var velocity = (_path[1] - GlobalPosition).Normalized() * MaxSpeed;
 
-                        MoveAndSlide(velocity);
+                            MoveAndSlide(velocity);
+                        }
                     }
                     else
                     {
@@ -114,7 +117,14 @@ namespace Ludum48.Core.Enemies
         {
             if (_navigation2D == null)
             {
-                _navigation2D = GameManager.Instance.SceneManager.CurrentLevel.Navigation2D;
+                if (GameManager.Instance.SceneManager.CurrentLevel != null)
+                {
+                    _navigation2D = GameManager.Instance.SceneManager.CurrentLevel.Navigation2D;
+                }
+                else
+                {
+                    return;
+                }
             }
 
             _path = _navigation2D.GetSimplePath(Position, GameManager.Instance.Player.Position).ToList();

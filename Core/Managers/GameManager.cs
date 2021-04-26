@@ -36,6 +36,8 @@ namespace Ludum48.Core.Managers
         {
             ResetGame();
             UIManager.UpdateTimeScale(MainPlayer.TimeScale);
+            UIManager.UpdateTimer(0, 0, false);
+            UIManager.ToggleReplayScreen(false);
             SceneManager.LoadMainMenu();
         }
 

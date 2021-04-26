@@ -78,10 +78,10 @@ namespace Ludum48.Core
             {
                 Dash();
             }
-            if (inputEvent.IsActionPressed("rewind"))
-            {
-                GameManager.Instance.StartRewind();
-            }
+            //if (inputEvent.IsActionPressed("rewind"))
+            //{
+            //    GameManager.Instance.StartRewind();
+            //}
         }
 
         public override void _Ready()

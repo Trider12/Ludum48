@@ -12,15 +12,14 @@ namespace Ludum48.Core.Managers
 
         private TextureRect _ammoTexture;
         private Clock _clock;
+        private AudioStreamPlayer _clockPlayer;
         private TextureRect _healthEmptyTexture;
         private TextureRect _healthFullTexture;
-
         private Control _hud;
         private Control _pauseMenu;
         private ColorRect _replayScreen;
+        private AudioStreamPlayer _rewindPlayer;
         private ColorRect _rewindScreen;
-        private Label _timerLabel;
-        private ColorRect _timerRect;
 
         public override void _Input(InputEvent @event)
         {
@@ -58,9 +57,9 @@ namespace Ludum48.Core.Managers
             _pauseMenu = GetNode<Control>("PauseMenu");
             _rewindScreen = GetNode<ColorRect>("RewindScreen");
             _replayScreen = GetNode<ColorRect>("ReplayScreen");
-            _timerLabel = GetNode<Label>("HUD/Timer/Label");
-            _timerRect = GetNode<ColorRect>("HUD/Timer");
             _clock = GetNode<Clock>("HUD/Clock");
+            _rewindPlayer = GetNode<AudioStreamPlayer>("RewindPlayer");
+            _clockPlayer = GetNode<AudioStreamPlayer>("ClockPlayer");
 
             _ammoTexture = GetNode<TextureRect>("HUD/LowerLeft/AmmoBar");
             _healthEmptyTexture = GetNode<TextureRect>("HUD/LowerLeft/HealthEmpty");
@@ -75,11 +74,29 @@ namespace Ludum48.Core.Managers
         public void ToggleReplayScreen(bool visible)
         {
             _replayScreen.Visible = visible;
+
+            if (visible)
+            {
+                _clockPlayer.Play();
+            }
+            else
+            {
+                _clockPlayer.Stop();
+            }
         }
 
         public void ToggleRewindScreen(bool visible)
         {
             _rewindScreen.Visible = visible;
+
+            if (visible)
+            {
+                _rewindPlayer.Play();
+            }
+            else
+            {
+                _rewindPlayer.Stop();
+            }
         }
 
         public void UpdateAmmoCount(int count)
@@ -93,11 +110,6 @@ namespace Ludum48.Core.Managers
             ((AtlasTexture)_ammoTexture.Texture).Region = rect;
         }
 
-        //public void ToggleTimer(bool visible)
-        //{
-        //    //_timerRect.Visible = visible;
-        //    _clock.Visible = visible;
-        //}
         public void UpdateHealth(float currentHealth, float maxHealth)
         {
             var emptyHeartsCount = Mathf.Round(maxHealth / HeartValue);
@@ -109,9 +121,6 @@ namespace Ludum48.Core.Managers
 
         public void UpdateTimer(float percent, int depth, bool rewind)
         {
-            //_timerRect.Color = rewind || depth == 0 ? Colors.White : depth == 1 ? Colors.Green : depth == 2 ? Colors.Yellow : Colors.Red;
-            //_timerLabel.Text = percent.ToString("0.00");
-
             _clock.UpdateTime(percent, depth);
         }
 

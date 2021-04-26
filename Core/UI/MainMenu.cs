@@ -1,8 +1,11 @@
-using Godot;
-using Ludum48.Core.Managers;
-using Newtonsoft.Json;
 using System;
 using System.Linq;
+
+using Godot;
+
+using Ludum48.Core.Managers;
+
+using Newtonsoft.Json;
 
 namespace Ludum48.Core.UI
 {
@@ -75,9 +78,20 @@ namespace Ludum48.Core.UI
 
         public override void _Ready()
         {
-            GetNode<Button>("Buttons/Level1Button").Connect("pressed", this, nameof(OnLevel1ButtonPressed));
-            GetNode<Button>("Buttons/Level2Button").Connect("pressed", this, nameof(OnLevel2ButtonPressed));
-            GetNode<Button>("Buttons/Level3Button").Connect("pressed", this, nameof(OnLevel3ButtonPressed));
+            var button1 = GetNode<TextureButton>("Buttons/Control/Level1Button");
+            button1.Connect("pressed", this, nameof(OnLevel1ButtonPressed));
+            //button1.TextureHover = GetHighlightedTexture(button1.TextureNormal);
+            button1.TexturePressed = new ImageTexture();
+
+            var button2 = GetNode<TextureButton>("Buttons/Control/Level2Button");
+            button2.Connect("pressed", this, nameof(OnLevel2ButtonPressed));
+            //button2.TextureHover = GetHighlightedTexture(button2.TextureNormal);
+            button2.TexturePressed = new ImageTexture();
+
+            var button3 = GetNode<TextureButton>("Buttons/Control/Level3Button");
+            button3.Connect("pressed", this, nameof(OnLevel3ButtonPressed));
+            //button3.TextureHover = GetHighlightedTexture(button3.TextureNormal);
+            button3.TexturePressed = new ImageTexture();
 
             _settingsWindow = GetNode<ConfirmationDialog>("SettingsWindow");
 
@@ -153,6 +167,26 @@ namespace Ludum48.Core.UI
             GD.Print("Window Resolution: " + OS.WindowSize + "; Viewport Resolution: " + GetViewport().Size);
 
             AudioServer.SetBusVolumeDb(AudioServer.GetBusIndex("Master"), GD.Linear2Db(_settings.MasterVolume / 100f));
+        }
+
+        private Texture GetHighlightedTexture(Texture texture)
+        {
+            var image = texture.GetData();
+
+            for (int i = 0; i < image.GetWidth(); i++)
+            {
+                for (int j = 0; j < image.GetHeight(); j++)
+                {
+                    var color = image.GetPixel(i, j) + Color.ColorN("white", 0.1f);
+
+                    image.SetPixel(i, j, color);
+                }
+            }
+
+            var newTexture = new ImageTexture();
+            newTexture.CreateFromImage(image);
+
+            return newTexture;
         }
 
         private void OnLevel1ButtonPressed()

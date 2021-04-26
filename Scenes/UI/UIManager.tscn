@@ -1,13 +1,15 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://Core/Managers/UIManager.cs" type="Script" id=1]
 [ext_resource path="res://Assets/Fonts/Roboto/Roboto-Regular.ttf" type="DynamicFontData" id=2]
 [ext_resource path="res://Assets/Materials/VHS.tres" type="Material" id=3]
 [ext_resource path="res://Assets/Textures/UI/HeartEmpty.png" type="Texture" id=4]
+[ext_resource path="res://Assets/Sounds/Rewind.wav" type="AudioStream" id=5]
 [ext_resource path="res://Assets/Textures/UI/Ammo.png" type="Texture" id=6]
 [ext_resource path="res://Assets/Textures/UI/HeartFull.png" type="Texture" id=7]
 [ext_resource path="res://Assets/Materials/BCS.tres" type="Material" id=8]
 [ext_resource path="res://Scenes/UI/Clock.tscn" type="PackedScene" id=9]
+[ext_resource path="res://Assets/Sounds/Tick6.wav" type="AudioStream" id=10]
 
 [sub_resource type="DynamicFont" id=1]
 size = 18
@@ -47,6 +49,12 @@ font_data = ExtResource( 2 )
 [node name="UIManager" type="CanvasLayer"]
 script = ExtResource( 1 )
 
+[node name="RewindPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 5 )
+
+[node name="ClockPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 10 )
+
 [node name="RewindScreen" type="ColorRect" parent="."]
 visible = false
 material = ExtResource( 3 )
@@ -76,6 +84,7 @@ __meta__ = {
 }
 
 [node name="PauseButton" type="Button" parent="HUD"]
+visible = false
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -80.0
@@ -90,6 +99,7 @@ __meta__ = {
 }
 
 [node name="LowerLeft" type="VBoxContainer" parent="HUD"]
+visible = false
 anchor_top = 1.0
 anchor_bottom = 1.0
 margin_left = 20.0
@@ -178,8 +188,14 @@ __meta__ = {
 [node name="PauseMenu" type="Control" parent="."]
 pause_mode = 2
 visible = false
-anchor_right = 1.0
-anchor_bottom = 1.0
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -960.0
+margin_top = -540.0
+margin_right = 960.0
+margin_bottom = 540.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -193,38 +209,34 @@ __meta__ = {
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="PauseMenu"]
-anchor_left = 0.4
-anchor_top = 0.3
-anchor_right = 0.6
-anchor_bottom = 0.7
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -100.0
+margin_top = -110.0
+margin_right = 100.0
+margin_bottom = 110.0
 custom_constants/separation = 20
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="ResumeButton" type="Button" parent="PauseMenu/VBoxContainer"]
-margin_right = 384.0
-margin_bottom = 130.0
+margin_right = 200.0
+margin_bottom = 100.0
 size_flags_vertical = 3
 custom_fonts/font = SubResource( 7 )
 text = "Resume"
 
-[node name="SaveButton" type="Button" parent="PauseMenu/VBoxContainer"]
-margin_top = 150.0
-margin_right = 384.0
-margin_bottom = 281.0
-size_flags_vertical = 3
-custom_fonts/font = SubResource( 7 )
-
 [node name="MainMenuButton" type="Button" parent="PauseMenu/VBoxContainer"]
-margin_top = 301.0
-margin_right = 384.0
-margin_bottom = 432.0
+margin_top = 120.0
+margin_right = 200.0
+margin_bottom = 220.0
 size_flags_vertical = 3
 custom_fonts/font = SubResource( 7 )
 text = "Main Menu"
 
 [connection signal="pressed" from="HUD/PauseButton" to="." method="_on_PauseButton_pressed"]
 [connection signal="pressed" from="PauseMenu/VBoxContainer/ResumeButton" to="." method="_on_ResumeButton_pressed"]
-[connection signal="pressed" from="PauseMenu/VBoxContainer/SaveButton" to="." method="_on_SaveButton_pressed"]
 [connection signal="pressed" from="PauseMenu/VBoxContainer/MainMenuButton" to="." method="_on_MainMenuButton_pressed"]
