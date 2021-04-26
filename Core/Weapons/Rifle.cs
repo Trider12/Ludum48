@@ -1,4 +1,4 @@
-﻿using Godot;
+using Godot;
 
 namespace Ludum48.Core.Weapons
 {
@@ -9,7 +9,7 @@ namespace Ludum48.Core.Weapons
         }
 
         [Export]
-        public override float RateOfFire { get; protected set; } = 10;
+        public override float RateOfFire { get; protected set; } = 1f;
 
         protected override void AdditionalLogic()
         {

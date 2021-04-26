@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 using Godot;
 
@@ -13,24 +13,18 @@ namespace Ludum48.Core.Managers
         public const int MaxFramesStored = MaxFramesPlayed * 8;
         public const int RewindTime = 3;
 
-        private static PackedScene EnemyScene = GD.Load<PackedScene>("res://Scenes/Enemies/Avocado.tscn");
         private static PackedScene PlayerScene = GD.Load<PackedScene>("res://Scenes/Player.tscn");
-
-        private List<Enemy> _currentEnemies = new List<Enemy>();
-        private List<Enemy> _enemyClones = new List<Enemy>();
-        private List<Enemy> _originalEnemies = new List<Enemy>();
-        private LinkedList<Player> _players = new LinkedList<Player>();
+        private Enemy _deathSource = null;
         private List<TimeObject> _timeObjects = new List<TimeObject>();
 
         private GameManager()
         {
-            Player = MainPlayer;
-            Player.Connect(nameof(Player.OnFrameChanged), this, nameof(OnMainPlayerFrameChanged));
+            ResetGame();
         }
 
         public static GameManager Instance { get; } = new GameManager();
 
-        public Player MainPlayer { get; } = (Player)PlayerScene.Instance();
+        public Player MainPlayer { get; private set; }
 
         public Player Player { get; private set; }
 
@@ -38,31 +32,32 @@ namespace Ludum48.Core.Managers
 
         public UIManager UIManager { get; } = (UIManager)GD.Load<PackedScene>("res://Scenes/UI/UIManager.tscn").Instance();
 
+        public void OnPlayerDeath(Enemy source)
+        {
+            if (MainPlayer.Depth > 0)
+            {
+                ResetGame();
+                SceneManager.LoadMainMenu();
+            }
+            else
+            {
+                _deathSource = source;
+                _deathSource.ToggleMarkSprite(true);
+
+                StartRewind();
+            }
+        }
+
         public void Register(TimeObject timeObject)
         {
             _timeObjects.Add(timeObject);
 
             timeObject.FrameFactor = System.Math.Max(1, MainPlayer.Depth * 2);
-
-            var enemy = timeObject as Enemy;
-
-            if (enemy != null)
-            {
-                if (enemy.IsClone)
-                {
-                    _enemyClones.Add(enemy);
-                }
-                else
-                {
-                    _originalEnemies.Add(enemy);
-                }
-            }
         }
 
         public void StartNormal()
         {
             UIManager.ToggleReplayScreen(false);
-            //UIManager.ToggleTimer(false);
             UIManager.UpdateTimer(0, 0, false);
 
             foreach (var obj in _timeObjects)
@@ -71,7 +66,8 @@ namespace Ludum48.Core.Managers
             }
 
             ResetPlayer();
-            //ResetEnemies();
+
+            UIManager.UpdateTimeScale(MainPlayer.TimeScale);
         }
 
         public void StartReplay(bool slowdown)
@@ -92,18 +88,19 @@ namespace Ludum48.Core.Managers
             var color = MainPlayer.Depth == 1 ? Colors.Green : MainPlayer.Depth == 2 ? Colors.Yellow : Colors.Red;
 
             NewPlayer(color);
-            //NewEnemies(color);
+
+            UIManager.UpdateTimeScale(MainPlayer.TimeScale);
         }
 
         public void StartRewind()
         {
             if (!MainPlayer.CanRewind())
             {
+                //Debugger.Break();
                 return;
             }
 
             UIManager.ToggleRewindScreen(true);
-            //UIManager.ToggleTimer(true);
 
             foreach (var obj in _timeObjects)
             {
@@ -116,36 +113,8 @@ namespace Ludum48.Core.Managers
             _timeObjects.Remove(timeObject);
         }
 
-        private void NewEnemies(Color color)
-        {
-            if (_currentEnemies.Count == 0)
-            {
-                _currentEnemies = new List<Enemy>(_originalEnemies);
-            }
-
-            foreach (var enemy in _currentEnemies)
-            {
-                //enemy.ToggleTimeIndicator(color);
-            }
-
-            _currentEnemies.Clear();
-
-            foreach (var enemy in _originalEnemies)
-            {
-                var clone = EnemyScene.Instance<Enemy>();
-                clone.IsClone = true;
-                clone.GlobalPosition = enemy.GlobalPosition;
-                clone.GlobalRotation = enemy.GlobalRotation;
-                SceneManager.CurrentLevel.SpawnEntity(clone);
-                _currentEnemies.Add(clone);
-            }
-        }
-
         private void NewPlayer(Color color)
         {
-            Player.Activate(false);
-            Player.ToggleTimeIndicator(color);
-
             var oldPlayer = Player;
 
             Player = PlayerScene.Instance<Player>();
@@ -153,7 +122,19 @@ namespace Ludum48.Core.Managers
             Player.GlobalPosition = oldPlayer.GlobalPosition;
             Player.GlobalRotation = oldPlayer.GlobalRotation;
             Player.UpdateAmmoCount();
-            _players.AddLast(Player);
+
+            oldPlayer.Activate(false);
+
+            if (oldPlayer == MainPlayer)
+            {
+                oldPlayer.ToggleTimeIndicator(color);
+            }
+            else
+            {
+                Unregister(oldPlayer);
+                oldPlayer.DeleteBullets();
+                oldPlayer.QueueFree();
+            }
         }
 
         private void OnMainPlayerFrameChanged(bool rewind)
@@ -162,40 +143,38 @@ namespace Ludum48.Core.Managers
             UIManager.UpdateTimer(percent, MainPlayer.Depth, rewind);
         }
 
-        private void ResetEnemies()
+        private void ResetGame()
         {
-            foreach (var clone in _enemyClones)
-            {
-                Unregister(clone);
+            _timeObjects.Clear();
+            _deathSource = null;
 
-                clone.QueueFree();
-            }
+            MainPlayer = PlayerScene.Instance<Player>();
+            MainPlayer.Connect(nameof(Player.OnFrameChanged), this, nameof(OnMainPlayerFrameChanged));
 
-            _enemyClones.Clear();
-            _currentEnemies.Clear();
+            Player = MainPlayer;
 
-            foreach (var enemy in _originalEnemies)
-            {
-                //enemy.ToggleTimeIndicator(Colors.White);
-            }
+            UIManager.UpdateTimeScale(MainPlayer.TimeScale);
         }
 
         private void ResetPlayer()
         {
-            foreach (var player in _players)
+            if (Player != MainPlayer)
             {
-                Unregister(player);
+                Unregister(Player);
 
-                player.Activate(false);
-                player.QueueFree();
+                Player.Activate(false);
+                Player.DeleteBullets();
+                Player.QueueFree();
+
+                Player = MainPlayer;
             }
 
-            _players.Clear();
-
-            Player = MainPlayer;
             Player.Activate(true);
             Player.ToggleTimeIndicator(Colors.White);
             Player.UpdateAmmoCount();
+
+            _deathSource.ToggleMarkSprite(false);
+            _deathSource = null;
         }
     }
 }

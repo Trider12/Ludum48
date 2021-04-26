@@ -1,12 +1,15 @@
-﻿using Godot;
-using Ludum48.Core.Managers;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+
+using Godot;
+
+using Ludum48.Core.Managers;
 
 namespace Ludum48.Core.Enemies
 {
     public abstract class Enemy : Entity
     {
+        private Sprite _markSprite;
         private Navigation2D _navigation2D;
         private List<Vector2> _path = new List<Vector2>();
         private float _pathUpdateInterval = 0.5f;
@@ -16,6 +19,8 @@ namespace Ludum48.Core.Enemies
         {
             _pathUpdateTimer.Connect("timeout", this, nameof(OnPathUpdateTimer));
         }
+
+        public override float MaxHealth { get; protected set; } = 3;
 
         protected virtual float SightRadius { get; } = 2000;
 
@@ -27,6 +32,8 @@ namespace Ludum48.Core.Enemies
         {
             base._Ready();
 
+            _markSprite = GetNode<Sprite>("MarkSprite");
+
             AddChild(_pathUpdateTimer);
         }
 
@@ -36,11 +43,10 @@ namespace Ludum48.Core.Enemies
 
             foreach (var bullet in _bullets)
             {
-                if (!bullet.IsActive)
-                {
-                    bullet.EraseFromFuture();
-                }
+                bullet.EraseFromFuture();
             }
+
+            ToggleMarkSprite(false);
         }
 
         public override void PhysicsProcess(float delta)
@@ -90,6 +96,11 @@ namespace Ludum48.Core.Enemies
 
         public override void Process(float delta)
         {
+        }
+
+        public void ToggleMarkSprite(bool visible)
+        {
+            _markSprite.Visible = visible;
         }
 
         protected abstract void TryAttack();

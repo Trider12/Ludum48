@@ -1,7 +1,9 @@
-﻿using Godot;
+﻿using System.Collections.Generic;
+
+using Godot;
+
 using Ludum48.Core.UI;
 using Ludum48.Core.Utility;
-using System.Collections.Generic;
 
 namespace Ludum48.Core.Managers
 {
@@ -34,8 +36,6 @@ namespace Ludum48.Core.Managers
 
         public void LoadMainMenu()
         {
-            GameManager.Instance.Player.Reset();
-
             CurrentLevel.RemovePlayer();
             CurrentLevel.QueueFree();
             CurrentLevel = null;

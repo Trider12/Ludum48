@@ -1,4 +1,5 @@
 using Godot;
+
 using Ludum48.Core.UI;
 
 namespace Ludum48.Core.Managers
@@ -81,12 +82,6 @@ namespace Ludum48.Core.Managers
             _rewindScreen.Visible = visible;
         }
 
-        //public void ToggleTimer(bool visible)
-        //{
-        //    //_timerRect.Visible = visible;
-        //    _clock.Visible = visible;
-        //}
-
         public void UpdateAmmoCount(int count)
         {
             var rectSize = new Vector2(count * AmmoBubbleSize, AmmoBubbleSize);
@@ -98,6 +93,11 @@ namespace Ludum48.Core.Managers
             ((AtlasTexture)_ammoTexture.Texture).Region = rect;
         }
 
+        //public void ToggleTimer(bool visible)
+        //{
+        //    //_timerRect.Visible = visible;
+        //    _clock.Visible = visible;
+        //}
         public void UpdateHealth(float currentHealth, float maxHealth)
         {
             var emptyHeartsCount = Mathf.Round(maxHealth / HeartValue);
@@ -113,6 +113,11 @@ namespace Ludum48.Core.Managers
             //_timerLabel.Text = percent.ToString("0.00");
 
             _clock.UpdateTime(percent, depth);
+        }
+
+        public void UpdateTimeScale(float scale)
+        {
+            _clock.UpdateTimeSpeed(scale);
         }
 
         private void TogglePause()

@@ -46,7 +46,7 @@ namespace Ludum48.Core.Weapons
         public virtual float BulletSpeed { get; protected set; } = 600;
 
         [Export]
-        public virtual float Damage { get; protected set; } = 25;
+        public virtual float Damage { get; protected set; } = 1;
 
         [Export]
         public virtual string GunDescription { get; protected set; }

@@ -44,7 +44,14 @@ namespace Ludum48.Core.Enemies
             _armorBox.Connect("body_entered", this, nameof(OnArmorBoxBodyEntered));
         }
 
-        protected override void Die(Node source)
+        protected override void ApplyFrame(BaseTimeFrame frame)
+        {
+            base.ApplyFrame(frame);
+
+            //CurrentHealth = (frame as HealthTimeFrame).Health;
+        }
+
+        protected override void Die(Entity source)
         {
             IsActive = false;
 
@@ -52,6 +59,11 @@ namespace Ludum48.Core.Enemies
             {
                 EraseFromFuture();
             }
+        }
+
+        protected override BaseTimeFrame GetTimeFrame()
+        {
+            return new HealthTimeFrame { Position = Position, Rotation = Rotation, IsActive = IsActive, Health = CurrentHealth };
         }
 
         protected override void TryAttack()

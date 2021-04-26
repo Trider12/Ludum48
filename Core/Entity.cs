@@ -69,7 +69,7 @@ namespace Ludum48.Core
             _hitBox.Connect("body_entered", this, nameof(OnHitBoxBodyEntered));
         }
 
-        public virtual void GetDamage(float damage, Node source)
+        public virtual void GetDamage(float damage, Entity source)
         {
             CurrentHealth -= damage;
 
@@ -85,7 +85,7 @@ namespace Ludum48.Core
             bullet.OwnerEntity = this;
         }
 
-        protected abstract void Die(Node source);
+        protected abstract void Die(Entity source);
 
         private void OnHitBoxBodyEntered(Node body)
         {
@@ -96,7 +96,7 @@ namespace Ludum48.Core
                 return;
             }
 
-            GetDamage(bullet.Hit(), bullet);
+            GetDamage(bullet.Hit(), bullet.OwnerEntity);
         }
     }
 }

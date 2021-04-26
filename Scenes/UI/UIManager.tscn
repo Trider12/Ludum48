@@ -29,12 +29,12 @@ flags = 2
 atlas = ExtResource( 6 )
 region = Rect2( 0, 0, 4, 4 )
 
-[sub_resource type="DynamicFont" id=6]
+[sub_resource type="DynamicFont" id=5]
 size = 30
 use_filter = true
 font_data = ExtResource( 2 )
 
-[sub_resource type="DynamicFont" id=5]
+[sub_resource type="DynamicFont" id=6]
 size = 30
 use_filter = true
 font_data = ExtResource( 2 )
@@ -150,7 +150,7 @@ __meta__ = {
 [node name="Label" type="Label" parent="HUD/Timer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-custom_fonts/font = SubResource( 6 )
+custom_fonts/font = SubResource( 5 )
 custom_colors/font_color = Color( 0, 0, 0, 1 )
 text = "5.55"
 align = 1
@@ -169,7 +169,7 @@ margin_left = -34.5
 margin_top = -44.0
 margin_right = 34.5
 margin_bottom = -8.0
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 6 )
 text = "TIME"
 __meta__ = {
 "_edit_use_anchors_": false

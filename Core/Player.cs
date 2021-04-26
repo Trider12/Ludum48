@@ -1,7 +1,6 @@
-﻿using System.Diagnostics;
+﻿using Godot;
 
-using Godot;
-
+using Ludum48.Core.Enemies;
 using Ludum48.Core.Managers;
 using Ludum48.Core.Time;
 using Ludum48.Core.UI;
@@ -19,7 +18,7 @@ namespace Ludum48.Core
         private int _currentFrame = 0;
         private WeaponBase _currentWeapon = null;
         private Timer _dashTimer = new Timer();
-        private Node _deathSource = null;
+
         private float _maxHealth = 1;
         private ReloadBar _reloadBar;
         private TimeIndicator _timeIndicator;
@@ -124,6 +123,15 @@ namespace Ludum48.Core
             return TimeState != TimeState.Rewind && Depth < 3 && SavedFrames.Count >= GameManager.MaxFramesPlayed;
         }
 
+        public void DeleteBullets()
+        {
+            foreach (var bullet in _bullets)
+            {
+                GameManager.Instance.Unregister(bullet);
+                bullet.QueueFree();
+            }
+        }
+
         public override void PhysicsProcess(float delta)
         {
             var inputVector = new Vector2(Input.GetActionStrength("ui_right") - Input.GetActionStrength("ui_left"), Input.GetActionStrength("ui_down") - Input.GetActionStrength("ui_up")).Normalized();
@@ -150,15 +158,6 @@ namespace Ludum48.Core
             }
         }
 
-        public void Reset()
-        {
-            _velocity = Vector2.Zero;
-
-            CurrentHealth = MaxHealth;
-            _currentWeapon.FinishReloading();
-            UpdateHUD();
-        }
-
         public void ToggleTimeIndicator(Color color)
         {
             _timeIndicator.ChangeColor(color);
@@ -180,7 +179,6 @@ namespace Ludum48.Core
 
             if (CurrentFrame == GameManager.MaxFramesPlayed * FrameFactor)
             {
-                _deathSource = null;
                 GameManager.Instance.StartNormal();
             }
         }
@@ -195,24 +193,9 @@ namespace Ludum48.Core
             }
         }
 
-        protected override void Die(Node source)
+        protected override void Die(Entity source)
         {
-            if (_deathSource != null)
-            {
-                Debug.Assert(_deathSource == source);
-                GameManager.Instance.SceneManager.LoadMainMenu();
-                return;
-            }
-
-            if (Depth < 3)
-            {
-                GameManager.Instance.StartRewind();
-                _deathSource = source;
-            }
-            else
-            {
-                GameManager.Instance.SceneManager.LoadMainMenu();
-            }
+            GameManager.Instance.OnPlayerDeath(source as Enemy);
         }
 
         private void Dash()
@@ -240,7 +223,7 @@ namespace Ludum48.Core
         {
             if (area.CollisionLayer == 256) // EnemyHitbox
             {
-                GetDamage(1, area);
+                GetDamage(1, area.GetParent<Entity>());
             }
         }
 

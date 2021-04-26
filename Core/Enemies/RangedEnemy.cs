@@ -43,10 +43,13 @@ namespace Ludum48.Core.Enemies
         {
             base.ApplyFrame(frame);
 
-            _animatedSprite.Frame = (frame as SpriteTimeFrame).SpriteFrame;
+            var spriteFrame = frame as SpriteTimeFrame;
+
+            //CurrentHealth = spriteFrame.Health;
+            _animatedSprite.Frame = spriteFrame.SpriteFrame;
         }
 
-        protected override void Die(Node source)
+        protected override void Die(Entity source)
         {
             IsActive = false;
 
@@ -61,7 +64,7 @@ namespace Ludum48.Core.Enemies
 
         protected override BaseTimeFrame GetTimeFrame()
         {
-            return new SpriteTimeFrame { Position = Position, Rotation = Rotation, IsActive = IsActive, SpriteFrame = _animatedSprite.Frame };
+            return new SpriteTimeFrame { Position = Position, Rotation = Rotation, IsActive = IsActive, SpriteFrame = _animatedSprite.Frame, Health = CurrentHealth };
         }
 
         protected override void TryAttack()

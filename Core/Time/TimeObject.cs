@@ -12,8 +12,8 @@ namespace Ludum48.Core.Time
     public abstract class TimeObject : KinematicBody2D
     {
         private LinkedListNode<BaseTimeFrame> _currentFrameNode = null;
-
         private LinkedListNode<BaseTimeFrame> _nextFrameNode = null;
+        private LinkedListNode<BaseTimeFrame> _prevFrameNode = null;
 
         private float _replayFramesToPlay = 0f;
 
@@ -30,11 +30,7 @@ namespace Ludum48.Core.Time
             protected set { Visible = value; }
         }
 
-        public TimeState TimeState { get; private set; } = TimeState.Normal;
-
-        protected LinkedList<BaseTimeFrame> SavedFrames { get; set; } = new LinkedList<BaseTimeFrame>();
-
-        private float TimeScale
+        public float TimeScale
         {
             get
             {
@@ -64,6 +60,10 @@ namespace Ludum48.Core.Time
                 return 0;
             }
         }
+
+        public TimeState TimeState { get; private set; } = TimeState.Normal;
+
+        protected LinkedList<BaseTimeFrame> SavedFrames { get; set; } = new LinkedList<BaseTimeFrame>();
 
         public override sealed void _PhysicsProcess(float delta)
         {
@@ -143,6 +143,11 @@ namespace Ludum48.Core.Time
             }
 
             TimeState = TimeState.Rewind;
+
+            if (_currentFrameNode == null && _prevFrameNode != null)
+            {
+                _currentFrameNode = _prevFrameNode;
+            }
         }
 
         protected virtual void ApplyFrame(BaseTimeFrame frame)
@@ -201,6 +206,7 @@ namespace Ludum48.Core.Time
 
                 ApplyFrame(_currentFrameNode.Value);
 
+                _prevFrameNode = _currentFrameNode;
                 _currentFrameNode = _currentFrameNode.Next;
 
                 CustomReplayLogic();

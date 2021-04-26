@@ -60,16 +60,31 @@ __meta__ = {
 }
 
 [node name="Avocado" parent="YSort" instance=ExtResource( 5 )]
-position = Vector2( -616, 864 )
+position = Vector2( 379.894, 838.573 )
 
 [node name="Avocado2" parent="YSort" instance=ExtResource( 5 )]
-position = Vector2( -248, -304 )
+position = Vector2( -205.621, -804.067 )
+
+[node name="Avocado3" parent="YSort" instance=ExtResource( 5 )]
+position = Vector2( 1019.12, 124.023 )
 
 [node name="Flower" parent="YSort" instance=ExtResource( 6 )]
-position = Vector2( 972, -740 )
+position = Vector2( 764.345, -651.005 )
+
+[node name="Flower2" parent="YSort" instance=ExtResource( 6 )]
+position = Vector2( -1583.43, -481.491 )
+
+[node name="Flower3" parent="YSort" instance=ExtResource( 6 )]
+position = Vector2( -655.335, -417.923 )
 
 [node name="WaterMelon" parent="YSort" instance=ExtResource( 7 )]
-position = Vector2( 1316, 828 )
+position = Vector2( 1426.18, 747.481 )
+
+[node name="WaterMelon2" parent="YSort" instance=ExtResource( 7 )]
+position = Vector2( 112.45, 171.133 )
+
+[node name="WaterMelon3" parent="YSort" instance=ExtResource( 7 )]
+position = Vector2( 1549.08, -744.243 )
 
 [node name="Foreground" type="Sprite" parent="."]
 visible = false
@@ -79,7 +94,7 @@ __meta__ = {
 }
 
 [node name="PlayerSpawn" type="Node2D" parent="."]
-position = Vector2( -1413.54, 132.585 )
+position = Vector2( -1756.63, 915.811 )
 __meta__ = {
 "_edit_lock_": true
 }
