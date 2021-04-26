@@ -1,10 +1,11 @@
-﻿using Godot;
+﻿using System.Diagnostics;
+
+using Godot;
+
 using Ludum48.Core.Managers;
+using Ludum48.Core.Time;
 using Ludum48.Core.UI;
-using Ludum48.Core.Utility;
 using Ludum48.Core.Weapons;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Ludum48.Core
 {
@@ -13,17 +14,15 @@ namespace Ludum48.Core
         private const float DashDelay = 1;
         private const float DashForce = 400;
 
-        private static readonly Dictionary<string, PackedScene> _weaponScenes = PrefabHelper.LoadPrefabsDictionary("res://Scenes/Weapons");
         private Camera2D _camera;
         private bool _canDash = true;
         private int _currentFrame = 0;
         private WeaponBase _currentWeapon = null;
         private Timer _dashTimer = new Timer();
-        private Node2D _gunSlot;
+        private Node _deathSource = null;
         private float _maxHealth = 1;
         private ReloadBar _reloadBar;
-
-        private List<WeaponBase> _weapons = _weaponScenes.Select(kv => (WeaponBase)kv.Value.Instance()).ToList();
+        private TimeIndicator _timeIndicator;
 
         public Player() : base()
         {
@@ -71,18 +70,6 @@ namespace Ludum48.Core
 
         public override void _Input(InputEvent inputEvent)
         {
-            if (inputEvent.IsActionPressed("slot1"))
-            {
-                EquipWeapon(0);
-            }
-            if (inputEvent.IsActionPressed("slot2"))
-            {
-                EquipWeapon(1);
-            }
-            if (inputEvent.IsActionPressed("slot3"))
-            {
-                EquipWeapon(2);
-            }
             if (inputEvent.IsActionPressed("reload"))
             {
                 _currentWeapon.StartReloading();
@@ -107,13 +94,13 @@ namespace Ludum48.Core
             _reloadBar = GetNode<ReloadBar>("ReloadBar");
             _reloadBar.Connect(nameof(ReloadBar.ReloadFinished), this, nameof(OnReloadBarFinished));
 
-            _gunSlot = GetNode<Node2D>("GunSlot");
-
             _hitBox.Connect("area_entered", this, nameof(OnHitBoxAreaEntered));
 
-            UpdateHUD();
+            _timeIndicator = GetNode<TimeIndicator>("TimeIndicator");
 
-            EquipWeapon();
+            _currentWeapon = GetNode<WeaponBase>("Weapon");
+
+            UpdateHUD();
 
             AddChild(_dashTimer);
 
@@ -157,20 +144,24 @@ namespace Ludum48.Core
 
         public override void Process(float delta)
         {
+            if (Input.IsActionPressed("fire"))
+            {
+                _currentWeapon.TryShoot();
+            }
         }
 
         public void Reset()
         {
-            CurrentHealth = MaxHealth;
-
-            foreach (var weapon in _weapons)
-            {
-                weapon.FinishReloading();
-            }
-
             _velocity = Vector2.Zero;
 
-            EquipWeapon(0);
+            CurrentHealth = MaxHealth;
+            _currentWeapon.FinishReloading();
+            UpdateHUD();
+        }
+
+        public void ToggleTimeIndicator(Color color)
+        {
+            _timeIndicator.ChangeColor(color);
         }
 
         public void UpdateAmmoCount()
@@ -189,6 +180,7 @@ namespace Ludum48.Core
 
             if (CurrentFrame == GameManager.MaxFramesPlayed * FrameFactor)
             {
+                _deathSource = null;
                 GameManager.Instance.StartNormal();
             }
         }
@@ -203,11 +195,19 @@ namespace Ludum48.Core
             }
         }
 
-        protected override void Die()
+        protected override void Die(Node source)
         {
+            if (_deathSource != null)
+            {
+                Debug.Assert(_deathSource == source);
+                GameManager.Instance.SceneManager.LoadMainMenu();
+                return;
+            }
+
             if (Depth < 3)
             {
                 GameManager.Instance.StartRewind();
+                _deathSource = source;
             }
             else
             {
@@ -231,21 +231,6 @@ namespace Ludum48.Core
             _dashTimer.Start(DashDelay);
         }
 
-        private void EquipWeapon(int index = 0)
-        {
-            if (_currentWeapon != null)
-            {
-                _gunSlot.RemoveChild(_currentWeapon);
-                _reloadBar.InterruptReloading();
-            }
-
-            _currentWeapon = _weapons.ElementAt(index);
-
-            _gunSlot.AddChild(_currentWeapon);
-            _currentWeapon.Position = Vector2.Zero;
-            GameManager.Instance.UIManager.UpdateAmmoCount(_currentWeapon.AmmoCount);
-        }
-
         private void OnDashTimeout()
         {
             _canDash = true;
@@ -255,7 +240,7 @@ namespace Ludum48.Core
         {
             if (area.CollisionLayer == 256) // EnemyHitbox
             {
-                GetDamage(1);
+                GetDamage(1, area);
             }
         }
 
@@ -274,6 +259,7 @@ namespace Ludum48.Core
             var uiManager = GameManager.Instance.UIManager;
 
             uiManager.UpdateHealth(CurrentHealth, MaxHealth);
+            uiManager.UpdateAmmoCount(_currentWeapon.AmmoCount);
         }
     }
 }

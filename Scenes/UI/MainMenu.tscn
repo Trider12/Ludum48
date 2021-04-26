@@ -73,7 +73,7 @@ margin_right = 384.0
 margin_bottom = 251.0
 size_flags_vertical = 3
 custom_fonts/font = SubResource( 1 )
-text = "Level 2"
+text = "Level 3"
 
 [node name="SettingsButton" type="Button" parent="Buttons"]
 margin_top = 271.0

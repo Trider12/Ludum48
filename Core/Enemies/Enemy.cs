@@ -1,18 +1,12 @@
 ﻿using Godot;
 using Ludum48.Core.Managers;
-using Ludum48.Core.Weapons;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Ludum48.Core.Enemies
 {
-    public class Enemy : Entity
+    public abstract class Enemy : Entity
     {
-        protected AnimationPlayer _animationPlayer = null;
-        protected Area2D _armorBox;
-        protected float SightRadius = 800;
-        protected float StopAtRadius = 90;
-        protected float WalkRadius = 600;
         private Navigation2D _navigation2D;
         private List<Vector2> _path = new List<Vector2>();
         private float _pathUpdateInterval = 0.5f;
@@ -23,15 +17,30 @@ namespace Ludum48.Core.Enemies
             _pathUpdateTimer.Connect("timeout", this, nameof(OnPathUpdateTimer));
         }
 
+        protected virtual float SightRadius { get; } = 2000;
+
+        protected virtual float StopAtRadius { get; } = 90;
+
+        protected virtual float WalkRadius { get; } = 600;
+
         public override void _Ready()
         {
             base._Ready();
 
-            _animationPlayer = GetNode<AnimationPlayer>("AnimationPlayer");
-            _armorBox = GetNode<Area2D>("ArmorBox");
-            _armorBox.Connect("body_entered", this, nameof(OnArmorBoxBodyEntered));
-
             AddChild(_pathUpdateTimer);
+        }
+
+        public override void EraseFromFuture()
+        {
+            base.EraseFromFuture();
+
+            foreach (var bullet in _bullets)
+            {
+                if (!bullet.IsActive)
+                {
+                    bullet.EraseFromFuture();
+                }
+            }
         }
 
         public override void PhysicsProcess(float delta)
@@ -67,7 +76,7 @@ namespace Ludum48.Core.Enemies
                     }
                     else
                     {
-                        Attack();
+                        TryAttack();
                     }
                 }
 
@@ -83,30 +92,7 @@ namespace Ludum48.Core.Enemies
         {
         }
 
-        protected override void Die()
-        {
-            IsActive = false;
-        }
-
-        private void Attack()
-        {
-            if (!_animationPlayer.IsPlaying())
-            {
-                _animationPlayer.Play("attack");
-            }
-        }
-
-        private void OnArmorBoxBodyEntered(Node body)
-        {
-            var bullet = body as Bullet;
-
-            if (bullet == null)
-            {
-                return;
-            }
-
-            bullet.Pop();
-        }
+        protected abstract void TryAttack();
 
         private void OnPathUpdateTimer()
         {

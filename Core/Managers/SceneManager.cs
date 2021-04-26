@@ -7,7 +7,7 @@ namespace Ludum48.Core.Managers
 {
     public class SceneManager : Node2D
     {
-        private static readonly Dictionary<string, PackedScene> _levels = PrefabHelper.LoadPrefabsDictionary("res://Scenes/Levels", new string[] { });
+        private static readonly Dictionary<string, PackedScene> _levels = PrefabHelper.LoadPrefabsDictionary("res://Scenes/Levels");
         private MainMenu _mainMenu;
         private SceneTree _tree;
 

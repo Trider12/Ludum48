@@ -20,7 +20,7 @@ namespace Ludum48.Core.Weapons
         {
             var bullet = InstanceBullet();
 
-            GetParent().GetParent().GetParent().AddChild(bullet);
+            GetParent().GetParent().AddChild(bullet);
         }
     }
 }

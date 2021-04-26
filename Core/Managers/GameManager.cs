@@ -1,18 +1,19 @@
-﻿using Godot;
+﻿using System.Collections.Generic;
+
+using Godot;
+
 using Ludum48.Core.Enemies;
-using System.Collections.Generic;
+using Ludum48.Core.Time;
 
 namespace Ludum48.Core.Managers
 {
-    public enum TimeState { Replay, Rewind, Normal }
-
     public class GameManager : Object
     {
         public const int MaxFramesPlayed = RewindTime * 60;
         public const int MaxFramesStored = MaxFramesPlayed * 8;
         public const int RewindTime = 3;
 
-        private static PackedScene EnemyScene = GD.Load<PackedScene>("res://Scenes/Enemies/Enemy1.tscn");
+        private static PackedScene EnemyScene = GD.Load<PackedScene>("res://Scenes/Enemies/Avocado.tscn");
         private static PackedScene PlayerScene = GD.Load<PackedScene>("res://Scenes/Player.tscn");
 
         private List<Enemy> _currentEnemies = new List<Enemy>();
@@ -70,7 +71,7 @@ namespace Ludum48.Core.Managers
             }
 
             ResetPlayer();
-            ResetEnemies();
+            //ResetEnemies();
         }
 
         public void StartReplay(bool slowdown)
@@ -91,7 +92,7 @@ namespace Ludum48.Core.Managers
             var color = MainPlayer.Depth == 1 ? Colors.Green : MainPlayer.Depth == 2 ? Colors.Yellow : Colors.Red;
 
             NewPlayer(color);
-            NewEnemies(color);
+            //NewEnemies(color);
         }
 
         public void StartRewind()
@@ -124,7 +125,7 @@ namespace Ludum48.Core.Managers
 
             foreach (var enemy in _currentEnemies)
             {
-                enemy.ToggleTimeIndicator(color);
+                //enemy.ToggleTimeIndicator(color);
             }
 
             _currentEnemies.Clear();
@@ -175,7 +176,7 @@ namespace Ludum48.Core.Managers
 
             foreach (var enemy in _originalEnemies)
             {
-                enemy.ToggleTimeIndicator(Colors.White);
+                //enemy.ToggleTimeIndicator(Colors.White);
             }
         }
 

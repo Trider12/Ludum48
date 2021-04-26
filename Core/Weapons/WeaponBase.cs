@@ -1,11 +1,15 @@
-﻿using Godot;
+﻿using System.Collections.Generic;
+
+using Godot;
+
 using Ludum48.Core.Managers;
+using Ludum48.Core.Utility;
 
 namespace Ludum48.Core.Weapons
 {
     public abstract class WeaponBase : Node2D
     {
-        protected static readonly PackedScene BulletScene = GD.Load<PackedScene>("res://Scenes/Bullet.tscn");
+        protected static readonly Dictionary<string, PackedScene> _bulletsScenes = PrefabHelper.LoadPrefabsDictionary("res://Scenes/Bullets");
 
         protected Node2D _muzzlePoint;
         private int _ammoCount = 0;
@@ -20,9 +24,6 @@ namespace Ludum48.Core.Weapons
             _shootTimer.OneShot = true;
             _shootTimer.Connect("timeout", this, nameof(OnShootTimer));
         }
-
-        [Export]
-        public virtual float Accuracy { get; protected set; } = 100f;
 
         public int AmmoCount
         {
@@ -39,7 +40,10 @@ namespace Ludum48.Core.Weapons
         public virtual int AmmoPerShot { get; protected set; } = 1;
 
         [Export]
-        public virtual float BulletSpeed { get; protected set; } = 300;
+        public virtual string BulletName { get; set; } = "Bullet";
+
+        [Export]
+        public virtual float BulletSpeed { get; protected set; } = 600;
 
         [Export]
         public virtual float Damage { get; protected set; } = 25;
@@ -53,8 +57,10 @@ namespace Ludum48.Core.Weapons
         [Export]
         public virtual int MagSize { get; protected set; } = 30;
 
+        public Entity OwnerEntity { get; set; }
+
         [Export]
-        public virtual int ProjectilesPerShot { get; protected set; } = 1;
+        public virtual int ProjectilesPerShot { get; set; } = 1;
 
         [Export]
         public virtual float RateOfFire { get; protected set; } = 2f;
@@ -67,17 +73,9 @@ namespace Ludum48.Core.Weapons
 
         public float ShotDelay => 1f / RateOfFire;
 
-        public override void _Process(float delta)
-        {
-            if (Input.IsActionPressed("fire"))
-            {
-                TryShoot();
-            }
-        }
-
         public override void _Ready()
         {
-            _sprite = GetNode<Sprite>("Sprite");
+            _sprite = GetNodeOrNull<Sprite>("Sprite");
 
             _muzzlePoint = GetNode<Node2D>("Muzzle");
 
@@ -104,28 +102,7 @@ namespace Ludum48.Core.Weapons
             AmmoCount = 0;
         }
 
-        protected abstract void AdditionalLogic();
-
-        protected Bullet InstanceBullet()
-        {
-            var bullet = (Bullet)BulletScene.Instance();
-
-            bullet.GlobalPosition = _muzzlePoint.GlobalPosition;
-            bullet.Direction = (GetGlobalMousePosition() - GlobalPosition).Normalized();
-            bullet.Speed = BulletSpeed;
-            bullet.Damage = Damage;
-
-            return bullet;
-        }
-
-        protected abstract void SpawnProjectiles();
-
-        private void OnShootTimer()
-        {
-            _canShoot = true;
-        }
-
-        private void TryShoot()
+        public void TryShoot()
         {
             if (!_canShoot || AmmoCount <= 0)
             {
@@ -137,6 +114,28 @@ namespace Ludum48.Core.Weapons
 
             _canShoot = false;
             _shootTimer.Start(ShotDelay);
+        }
+
+        protected abstract void AdditionalLogic();
+
+        protected Bullet InstanceBullet()
+        {
+            var bullet = _bulletsScenes[BulletName].Instance<Bullet>();
+
+            bullet.GlobalPosition = _muzzlePoint.GlobalPosition;
+            bullet.Direction = (GetGlobalMousePosition() - GlobalPosition).Normalized();
+            bullet.Speed = BulletSpeed;
+            bullet.Damage = Damage;
+            bullet.OwnerEntity = OwnerEntity;
+
+            return bullet;
+        }
+
+        protected abstract void SpawnProjectiles();
+
+        private void OnShootTimer()
+        {
+            _canShoot = true;
         }
     }
 }

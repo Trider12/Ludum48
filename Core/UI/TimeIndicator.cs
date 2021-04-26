@@ -1,6 +1,6 @@
 ﻿using Godot;
 
-namespace GlobalGameJam2021.Core.UI
+namespace Ludum48.Core.UI
 {
     public class TimeIndicator : Sprite
     {

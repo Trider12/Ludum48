@@ -1,34 +1,54 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://Core/Player.cs" type="Script" id=1]
-[ext_resource path="res://Assets/Textures/Player/Player.png" type="Texture" id=2]
+[ext_resource path="res://Assets/Textures/Player/Cop/hero100.png" type="Texture" id=2]
 [ext_resource path="res://Scenes/UI/ReloadBar.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Scenes/UI/TimeIndicator.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Assets/Textures/Player/Cop/hero104.png" type="Texture" id=5]
+[ext_resource path="res://Assets/Textures/Player/Cop/hero102.png" type="Texture" id=6]
+[ext_resource path="res://Assets/Textures/Player/Cop/hero103.png" type="Texture" id=7]
+[ext_resource path="res://Assets/Textures/Player/Cop/hero101.png" type="Texture" id=8]
+[ext_resource path="res://Assets/Textures/Player/Cop/hero105.png" type="Texture" id=9]
+[ext_resource path="res://Scenes/Weapons/Rifle.tscn" type="PackedScene" id=10]
+[ext_resource path="res://Assets/Textures/Player/Player.png" type="Texture" id=11]
+
+[sub_resource type="SpriteFrames" id=3]
+animations = [ {
+"frames": [ ExtResource( 2 ), ExtResource( 8 ), ExtResource( 6 ), ExtResource( 7 ), ExtResource( 5 ), ExtResource( 9 ) ],
+"loop": true,
+"name": "cop_attack",
+"speed": 6.0
+} ]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 40.0
 
 [sub_resource type="RectangleShape2D" id=2]
-extents = Vector2( 10, 13 )
+extents = Vector2( 50, 40 )
 
 [node name="Player" type="KinematicBody2D"]
 collision_layer = 2
 collision_mask = 5
 script = ExtResource( 1 )
 
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 8, 4 )
+rotation = 1.5708
+scale = Vector2( 0.2, 0.2 )
+texture = ExtResource( 11 )
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
+visible = false
+scale = Vector2( 0.5, 0.5 )
+frames = SubResource( 3 )
+animation = "cop_attack"
+
 [node name="TimeIndicator" parent="." instance=ExtResource( 4 )]
+position = Vector2( 0, -78 )
 
 [node name="ReloadBar" parent="." instance=ExtResource( 3 )]
 position = Vector2( 0, -28 )
 scale = Vector2( 0.75, 0.75 )
-
-[node name="Sprite" type="Sprite" parent="."]
-rotation = 1.5708
-scale = Vector2( 0.5, 0.5 )
-texture = ExtResource( 2 )
-region_rect = Rect2( 0, 0, 400, 400 )
-
-[node name="GunSlot" type="Node2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
@@ -47,3 +67,10 @@ collision_mask = 272
 [node name="CollisionShape2D" type="CollisionShape2D" parent="HitBox"]
 position = Vector2( 0, -5 )
 shape = SubResource( 2 )
+
+[node name="Weapon" parent="." instance=ExtResource( 10 )]
+
+[node name="Muzzle" parent="Weapon" index="0"]
+position = Vector2( 91, 0 )
+
+[editable path="Weapon"]

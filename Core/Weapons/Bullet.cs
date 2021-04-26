@@ -1,5 +1,7 @@
 ﻿using Godot;
+
 using Ludum48.Core.Managers;
+using Ludum48.Core.Time;
 
 namespace Ludum48.Core.Weapons
 {
@@ -8,31 +10,52 @@ namespace Ludum48.Core.Weapons
         [Export]
         public float LifeTime = 300f;
 
-        private AnimatedSprite _animatedSprite;
-
         [Export]
         private int _bouncesLeft = 5;
 
+        private CollisionShape2D _collisionShape;
         private Timer _timer = new Timer();
 
         public float Damage { get; set; }
 
         public Vector2 Direction { get; set; }
 
-        public Entity Owner { get; set; }
+        public override bool IsActive
+        {
+            get => base.IsActive;
+
+            protected set
+            {
+                base.IsActive = value;
+
+                _collisionShape.SetDeferred("disabled", !value);
+            }
+        }
+
+        public Entity OwnerEntity { get; set; }
         public float Speed { get; set; }
 
         public override void _Ready()
         {
             base._Ready();
 
-            _animatedSprite = GetNode<AnimatedSprite>("AnimatedSprite");
-            _animatedSprite.Connect("animation_finished", this, nameof(OnAnimationFinished));
+            _collisionShape = GetNode<CollisionShape2D>("CollisionShape2D");
 
             AddChild(_timer);
             _timer.OneShot = true;
             _timer.Connect("timeout", this, nameof(OnTimer));
             _timer.Start(LifeTime);
+
+            if (OwnerEntity != null)
+            {
+                OwnerEntity.RegisterBullet(this);
+            }
+        }
+
+        public float Hit()
+        {
+            IsActive = false;
+            return Damage;
         }
 
         public override void PhysicsProcess(float delta)
@@ -48,31 +71,19 @@ namespace Ludum48.Core.Weapons
                 }
                 else
                 {
-                    Pop();
+                    Hit();
                 }
             }
-        }
-
-        public float Pop()
-        {
-            IsActive = false;
-            _animatedSprite.Play();
-            return Damage;
         }
 
         public override void Process(float delta)
         {
         }
 
-        private void OnAnimationFinished()
+        private void OnTimer()
         {
             GameManager.Instance.Unregister(this);
             QueueFree();
-        }
-
-        private void OnTimer()
-        {
-            Pop();
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Godot;
 using Ludum48.Core.Managers;
 
-namespace GlobalGameJam2021.Core.UI
+namespace Ludum48.Core.UI
 {
     public class ReplayTimer : ColorRect
     {

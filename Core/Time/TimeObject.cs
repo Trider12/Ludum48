@@ -1,15 +1,19 @@
-﻿using Godot;
-using Ludum48.Core.Managers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace Ludum48.Core
+using Godot;
+
+using Ludum48.Core.Managers;
+
+namespace Ludum48.Core.Time
 {
+    public enum TimeState { Replay, Rewind, Normal }
+
     public abstract class TimeObject : KinematicBody2D
     {
-        private LinkedListNode<Tuple<Vector2, float, bool>> _currentFrameNode = null;
+        private LinkedListNode<BaseTimeFrame> _currentFrameNode = null;
 
-        private LinkedListNode<Tuple<Vector2, float, bool>> _nextFrameNode = null;
+        private LinkedListNode<BaseTimeFrame> _nextFrameNode = null;
 
         private float _replayFramesToPlay = 0f;
 
@@ -27,7 +31,8 @@ namespace Ludum48.Core
         }
 
         public TimeState TimeState { get; private set; } = TimeState.Normal;
-        protected LinkedList<Tuple<Vector2, float, bool>> SavedFrames { get; set; } = new LinkedList<Tuple<Vector2, float, bool>>();
+
+        protected LinkedList<BaseTimeFrame> SavedFrames { get; set; } = new LinkedList<BaseTimeFrame>();
 
         private float TimeScale
         {
@@ -97,6 +102,17 @@ namespace Ludum48.Core
             GameManager.Instance.Register(this);
         }
 
+        public virtual void EraseFromFuture()
+        {
+            var node = _currentFrameNode;
+
+            while (node != null)
+            {
+                node.Value.IsActive = false;
+                node = node.Next;
+            }
+        }
+
         public abstract void PhysicsProcess(float delta);
 
         public abstract void Process(float delta);
@@ -107,7 +123,7 @@ namespace Ludum48.Core
             Depth = 0;
         }
 
-        public void StartReplay()
+        public virtual void StartReplay()
         {
             if (TimeState == TimeState.Replay)
             {
@@ -119,7 +135,7 @@ namespace Ludum48.Core
             _currentFrameNode = _nextFrameNode;
         }
 
-        public void StartRewind()
+        public virtual void StartRewind()
         {
             if (TimeState == TimeState.Rewind)
             {
@@ -127,6 +143,13 @@ namespace Ludum48.Core
             }
 
             TimeState = TimeState.Rewind;
+        }
+
+        protected virtual void ApplyFrame(BaseTimeFrame frame)
+        {
+            Position = frame.Position;
+            Rotation = frame.Rotation;
+            IsActive = frame.IsActive;
         }
 
         protected virtual void CustomNormalLogic()
@@ -141,9 +164,14 @@ namespace Ludum48.Core
         {
         }
 
+        protected virtual BaseTimeFrame GetTimeFrame()
+        {
+            return new BaseTimeFrame { Position = Position, Rotation = Rotation, IsActive = IsActive };
+        }
+
         private void Normal(float delta)
         {
-            SavedFrames.AddLast(new Tuple<Vector2, float, bool>(Position, Rotation, IsActive));
+            SavedFrames.AddLast(GetTimeFrame());
             _currentFrameNode = SavedFrames.Last;
             CustomNormalLogic();
 
@@ -165,14 +193,13 @@ namespace Ludum48.Core
 
                 if (_currentFrameNode == null) // we don't have information about the object so late, so we duplicate, but make inactive
                 {
-                    var value = SavedFrames.Last.Value;
-                    SavedFrames.AddLast(new Tuple<Vector2, float, bool>(value.Item1, value.Item2, false));
+                    var value = SavedFrames.Last.Value.Clone();
+                    value.IsActive = false;
+                    SavedFrames.AddLast(value);
                     _currentFrameNode = SavedFrames.Last;
                 }
 
-                Position = _currentFrameNode.Value.Item1;
-                Rotation = _currentFrameNode.Value.Item2;
-                IsActive = _currentFrameNode.Value.Item3;
+                ApplyFrame(_currentFrameNode.Value);
 
                 _currentFrameNode = _currentFrameNode.Next;
 
@@ -197,14 +224,21 @@ namespace Ludum48.Core
 
                 if (_currentFrameNode == null) // we don't have information about the object so early, so we duplicate, but make inactive
                 {
-                    var value = SavedFrames.First.Value;
-                    SavedFrames.AddFirst(new Tuple<Vector2, float, bool>(value.Item1, value.Item2, false));
+                    if (SavedFrames.Count > 0)
+                    {
+                        var value = SavedFrames.First.Value.Clone();
+                        value.IsActive = false;
+                        SavedFrames.AddFirst(value);
+                    }
+                    else  // rewind before first frame happened
+                    {
+                        SavedFrames.AddFirst(GetTimeFrame());
+                    }
+
                     _currentFrameNode = SavedFrames.First;
                 }
 
-                Position = _currentFrameNode.Value.Item1;
-                Rotation = _currentFrameNode.Value.Item2;
-                IsActive = _currentFrameNode.Value.Item3;
+                ApplyFrame(_currentFrameNode.Value);
 
                 _nextFrameNode = _currentFrameNode;
                 _currentFrameNode = _currentFrameNode.Previous;

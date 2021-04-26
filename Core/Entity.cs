@@ -1,19 +1,18 @@
-﻿using GlobalGameJam2021.Core.UI;
+﻿using System.Collections.Generic;
+
 using Godot;
+
+using Ludum48.Core.Time;
 using Ludum48.Core.Weapons;
-using System.Collections.Generic;
 
 namespace Ludum48.Core
 {
     public abstract class Entity : TimeObject
     {
-        protected List<Bullet> _bullets;
+        protected List<Bullet> _bullets = new List<Bullet>();
         protected float _currentHealth;
-
         protected Area2D _hitBox;
         protected Vector2 _velocity = Vector2.Zero;
-
-        private TimeIndicator _timeIndicator;
 
         public Entity()
         {
@@ -27,10 +26,39 @@ namespace Ludum48.Core
             protected set { _currentHealth = value > 0 ? (value < MaxHealth ? value : MaxHealth) : 0; }
         }
 
+        public override bool IsActive
+        {
+            get => base.IsActive;
+
+            protected set
+            {
+                base.IsActive = value;
+
+                if (value)
+                {
+                    if (_hitBox.GetParent() != this)
+                    {
+                        CallDeferred("add_child", _hitBox);
+                    }
+                }
+                else
+                {
+                    if (_hitBox.GetParent() == this)
+                    {
+                        CallDeferred("remove_child", _hitBox);
+                    }
+                }
+            }
+        }
+
         public bool IsClone { get; set; } = false;
+
         public virtual float MaxHealth { get; protected set; } = 1;
+
         protected virtual float Acceleration { get; } = 3000;
+
         protected virtual float Friction { get; } = 3000;
+
         protected virtual float MaxSpeed { get; } = 200;
 
         public override void _Ready()
@@ -39,32 +67,25 @@ namespace Ludum48.Core
 
             _hitBox = GetNode<Area2D>("HitBox");
             _hitBox.Connect("body_entered", this, nameof(OnHitBoxBodyEntered));
-
-            _timeIndicator = GetNode<TimeIndicator>("TimeIndicator");
         }
 
-        public virtual void GetDamage(float damage)
+        public virtual void GetDamage(float damage, Node source)
         {
             CurrentHealth -= damage;
 
             if (CurrentHealth <= 0)
             {
-                Die();
+                Die(source);
             }
         }
 
         public void RegisterBullet(Bullet bullet)
         {
             _bullets.Add(bullet);
-            bullet.Owner = this;
+            bullet.OwnerEntity = this;
         }
 
-        public void ToggleTimeIndicator(Color color)
-        {
-            _timeIndicator.ChangeColor(color);
-        }
-
-        protected abstract void Die();
+        protected abstract void Die(Node source);
 
         private void OnHitBoxBodyEntered(Node body)
         {
@@ -75,7 +96,7 @@ namespace Ludum48.Core
                 return;
             }
 
-            GetDamage(bullet.Pop());
+            GetDamage(bullet.Hit(), bullet);
         }
     }
 }
